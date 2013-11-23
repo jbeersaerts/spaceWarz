@@ -1,5 +1,7 @@
 package be.ephec.view;
 
-public class PlayingView {
+import javax.swing.JFrame;
+
+public class PlayingView extends JFrame{
 
 }
