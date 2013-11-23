@@ -8,7 +8,7 @@ import be.ephec.model.area.Area;
  *     |_|_|_|    représentation sur la grille
  *       |_|
  * 
- * @author Jiksaa
+ * 
  *
  */
 

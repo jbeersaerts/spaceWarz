@@ -4,7 +4,7 @@ import be.ephec.model.area.Area;
 
 /**
  * Abstract class for pion of the game
- * @author Jiksaa
+ * 
  *
  */
 
