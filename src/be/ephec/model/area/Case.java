@@ -1,4 +1,4 @@
-package area;
+package be.ephec.model.area;
 
 public class Case extends Coord {
 	

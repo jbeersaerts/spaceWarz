@@ -1,6 +1,6 @@
-package area;
+package be.ephec.model.area;
 
-import pions.DeathStar;
+import be.ephec.model.pions.DeathStar;
 
 public class TestArea {
 	

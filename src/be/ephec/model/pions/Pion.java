@@ -1,6 +1,6 @@
-package pions;
+package be.ephec.model.pions;
 
-import area.Area;
+import be.ephec.model.area.Area;
 
 /**
  * Abstract class for pion of the game
