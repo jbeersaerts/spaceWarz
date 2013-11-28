@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -37,13 +38,15 @@ public class LauncherWindow extends javax.swing.JFrame{
 	
 	public LauncherWindow(){
 		super("My Windows");
-		this.setSize(300, 400);
+		this.setSize(460, 360);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		this.title = new JPanel();
-		this.title.setPreferredSize(new Dimension(250,50));
-		this.title.add(new JLabel(("SpaceWarz")));
+		this.title.setPreferredSize(new Dimension(250,100));
+		JLabel imgTitle = new JLabel("");
+		imgTitle.setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/title.jpg")));
+		this.title.add(imgTitle);
 		this.getContentPane().add(this.title,BorderLayout.NORTH);
 		
 		this.bottom = new JPanel();
