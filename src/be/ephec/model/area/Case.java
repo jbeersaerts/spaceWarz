@@ -45,7 +45,7 @@ public class Case extends Coord {
 	/**
 	 * Modify the case to become a pion 
 	 * 
-	 * @param name name of the pion who use the case
+	 * @param name of the pion who use the case
 	 */
 	public void becomePion(String name){
 		this.setUsedBy(name);

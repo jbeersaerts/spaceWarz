@@ -9,6 +9,7 @@ import be.ephec.model.area.Area;
  */
 
 public abstract class Pion {
+	private String name;
 	private int nbCase;
 	private int nbVie;
 	private boolean dead;
@@ -30,6 +31,13 @@ public abstract class Pion {
 	}
 	public void setDead(boolean dead) {
 		this.dead = dead;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	/**
