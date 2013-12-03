@@ -126,7 +126,7 @@ getContentPane().add(Quadrillage);
 				Quit.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent evt) {
 						dispose();
-						System.out.println("La fenêtre à été quittée");
+						System.out.println("La fenêtre a été quittée");
 						//TODO add your code for Quit.actionPerformed
 					}
 				});

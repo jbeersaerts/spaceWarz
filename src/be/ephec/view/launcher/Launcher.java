@@ -1,21 +1,25 @@
-package be.ephec.view;
+package be.ephec.view.launcher;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
-
 @SuppressWarnings("serial")
-public class LauncherWindow extends javax.swing.JFrame{
+public class Launcher extends javax.swing.JFrame{
 	private JPanel title;
 	private JPanel bottom;
 	private JPanel gridBagCenter;
@@ -36,7 +40,7 @@ public class LauncherWindow extends javax.swing.JFrame{
 	
 	
 	
-	public LauncherWindow(){
+	public Launcher(){
 		super("My Windows");
 		this.setSize(460, 360);
 		this.setLocationRelativeTo(null);
@@ -54,9 +58,20 @@ public class LauncherWindow extends javax.swing.JFrame{
 		JButton playButton = new JButton();
 		JButton quitButton = new JButton();
 		playButton.setText("Jouer !");
+		playButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				playButtonAction(e);				
+			}});
 		quitButton.setText("Quitter");
+		quitButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				quitButtonAction(e);			}
+			});
 		this.bottom.add(playButton);
 		this.bottom.add(quitButton);
+
 		this.getContentPane().add(this.bottom,BorderLayout.SOUTH);
 		
 		this.borderLeft = new JPanel();
@@ -118,8 +133,24 @@ public class LauncherWindow extends javax.swing.JFrame{
 		 * 
 		 */
 		tabLabel[3] = new JLabel();
-		tabLabel[3].setText("example : 192.168.xx.xx");
+		try {
+			tabLabel[3].setText(Inet4Address.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			tabLabel[3].setText("IP getting error");
+		}
 		
 	}
 
+	
+	
+	private void quitButtonAction(ActionEvent evt){
+		//System.out.println("Exit Button Activate "+evt);
+		this.dispose();
+	}
+	
+	private void playButtonAction(ActionEvent evt){
+		System.out.println("Let's play a game !");
+		this.dispose();
+		JOptionPane.showMessageDialog(null, "Let's Play a Game !!");
+	}
 }

@@ -1,6 +1,7 @@
 package be.ephec.view;
 
 import javax.swing.SwingUtilities;
+import be.ephec.view.launcher.Launcher;
 
 
 public class TestGui {
@@ -9,7 +10,7 @@ public class TestGui {
 	public static void main(String[] args) {		
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
-					LauncherWindow win = new LauncherWindow();
+					Launcher win = new Launcher();
 				}
 			});
 
