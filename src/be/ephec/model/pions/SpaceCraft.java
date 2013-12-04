@@ -13,6 +13,7 @@ public class SpaceCraft extends Pion{
 	public SpaceCraft(){
 		setName("Vaisseau");
 		setNbCase(3);
+		setNbVie(3);
 		setDead(false);
 		setTbCase(new Case[3]);
 	}

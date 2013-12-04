@@ -6,6 +6,7 @@ import be.ephec.model.area.Case;
 public class Pion {
 	private String name;
 	private int nbCase;
+	private int nbVie;
 	private boolean dead;
 	private Case tbCase[];
 	
@@ -18,6 +19,15 @@ public class Pion {
 		this.nbCase = nbCase;
 	}
 	
+	
+	public int getNbVie() {
+		return nbVie;
+	}
+
+	public void setNbVie(int nbVie) {
+		this.nbVie = nbVie;
+	}
+
 	public boolean isDead() {
 		return dead;
 	}
@@ -48,5 +58,18 @@ public class Pion {
 	public void setCase(Case c, int i){
 		this.tbCase[i] = c;
 	}
+	
+	public void isTouch(){
+		nbVie = nbVie -1;
+		updateDeadAfterTouch();
+	}
 
+	private void updateDeadAfterTouch(){
+		if(nbVie == 0) setDead(true);
+	}
+	
+	public String toString(){
+		return name;
+	}
+	
 }

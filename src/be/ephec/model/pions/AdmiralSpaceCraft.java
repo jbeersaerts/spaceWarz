@@ -13,6 +13,7 @@ public class AdmiralSpaceCraft extends Pion{
 	public AdmiralSpaceCraft(){
 		setName("Vaisseau Amiral");
 		setNbCase(4);
+		setNbVie(4);
 		setDead(false);
 		setTbCase(new Case[4]);
 	}

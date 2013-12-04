@@ -14,9 +14,9 @@ public class Case{
 	}
 	
 	public Case(int x, int y){
-		position.setX(x);
-		position.setY(y);
+		position = new Coord(x,y);
 		touch = false;
+		cannotBeUsed = false;
 		usedBy = null;
 	}
 

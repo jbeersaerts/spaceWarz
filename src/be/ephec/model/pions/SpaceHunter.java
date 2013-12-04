@@ -1,19 +1,18 @@
 package be.ephec.model.pions;
 
-import be.ephec.model.area.Area;
 import be.ephec.model.area.Case;
-
 /**     _
  *     |_|  
- *     |_|  représentation sur la grille
+ *     |_|  reprï¿½sentation sur la grille
  *       
  */
 
 public class SpaceHunter extends Pion{
 	
-	public SpaceHunter(Area matrice, int x, int y){
+	public SpaceHunter(){
 		setName("Chasseur Spatial");
 		setNbCase(2);
+		setNbVie(2);
 		setDead(false);
 		setTbCase(new Case[2]);
 	}
