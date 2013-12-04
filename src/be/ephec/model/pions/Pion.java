@@ -7,7 +7,7 @@ public class Pion {
 	private String name;
 	private int nbCase;
 	private boolean dead;
-	private Case tbCase[][];
+	private Case tbCase[];
 	
 	
 	public int getNbCase() {
@@ -33,12 +33,20 @@ public class Pion {
 		this.name = name;
 	}
 
-	public Case[][] getTbCase() {
+	public Case[] getTbCase() {
 		return tbCase;
 	}
 
-	public void setTbCase(Case[][] tbCase) {
+	public void setTbCase(Case[] tbCase) {
 		this.tbCase = tbCase;
+	}
+	
+	public Case getCase(int i){
+		return tbCase[i];
+	}
+	
+	public void setCase(Case c, int i){
+		this.tbCase[i] = c;
 	}
 
 }
