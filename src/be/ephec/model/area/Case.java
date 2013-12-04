@@ -1,31 +1,25 @@
 package be.ephec.model.area;
 
-public class Case extends Coord {
-	
-	private boolean use;
+import be.ephec.model.pions.Pion;
+
+public class Case{
+	private Coord position;
 	private boolean touch;
-	private String usedBy;
+	private boolean cannotBeUsed;
+	private Pion usedBy;
 	
 	public Case(){
-		super();
-		use = false;
 		touch = false;
-		usedBy = "nothing";
+		usedBy = null;
 	}
 	
 	public Case(int x, int y){
-		super(x, y);
-		use = false;
+		position.setX(x);
+		position.setY(y);
 		touch = false;
-		usedBy = "nothing";
+		usedBy = null;
 	}
-	
-	public boolean isUse() {
-		return use;
-	}
-	public void setUse(boolean use) {
-		this.use = use;
-	}
+
 	public boolean isTouch() {
 		return touch;
 	}
@@ -33,11 +27,27 @@ public class Case extends Coord {
 		this.touch = touch;
 	}
 	
-	public String getUsedBy() {
-		return usedBy;
+	public Coord getPosition() {
+		return position;
 	}
 
-	public void setUsedBy(String usedBy) {
+	public void setPosition(Coord position) {
+		this.position = position;
+	}
+
+	public boolean isCannotBeUsed() {
+		return cannotBeUsed;
+	}
+
+	public void setCannotBeUsed(boolean cannotBeUsed) {
+		this.cannotBeUsed = cannotBeUsed;
+	}
+
+	public Pion getUsedBy() {
+		return this.usedBy;
+	}
+
+	public void setUsedBy(Pion usedBy) {
 		this.usedBy = usedBy;
 	}
 	
@@ -47,20 +57,20 @@ public class Case extends Coord {
 	 * 
 	 * @param name of the pion who use the case
 	 */
-	public void becomePion(String name){
-		this.setUsedBy(name);
-		this.setUse(true);
+	public void becomePion(Pion usedBy){
+		this.setUsedBy(usedBy);
 	}
 
+	
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * Je la modifie un peu comme je veux pour afficher ce qui m'intéresse dans la console
+	 * Je la modifie un peu comme je veux pour afficher ce qui m'intÃ©resse dans la console
 	 *  
 	 */
 	public String toString(){
 		//return(getX()+":"+getY()+" "+isUse());
-		if(isUse()) return "1";
+		if(this.usedBy == null) return "1";
 		return "O";
 		
 	}
