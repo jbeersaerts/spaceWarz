@@ -38,18 +38,6 @@ public class SpaceWarz {
 		
 		area.affiche();
 		
-		/*
-		System.out.println("Coordonnée du vaisseau amiral");
-		for(int i=0; i<adm.getNbCase(); i++){
-			System.out.print(" "+adm.getCase(i).getPosition());
-		}
-		System.out.println();
-		System.out.println("Coordonnée du chasseur spatial");
-		for(int i=0; i<hunt.getNbCase(); i++){
-			System.out.print(" "+hunt.getCase(i).getPosition());
-		}
-		*/
-		
 	}
 
 }
