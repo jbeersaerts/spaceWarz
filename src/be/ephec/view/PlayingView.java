@@ -225,16 +225,10 @@ public class PlayingView extends javax.swing.JWindow {
 	}
 
 	private void jLabelMouseEntered(MouseEvent evt) {
-		//System.out.println("jLabel1.mouseEntered, event="+evt);
-		//TODO add your code for jLabel1.mouseEntered
-		int l = ((MyJLabels)evt.getSource()).getLine();
-		int c = ((MyJLabels)evt.getSource()).getColumn();
 		((MyJLabels)evt.getSource()).setBackground(new java.awt.Color(216,227,235));
 		((MyJLabels)evt.getSource()).setOpaque(true);
 	}
 	private void jLabelMouseExited(MouseEvent evt) {
-		int l = ((MyJLabels)evt.getSource()).getLine();
-		int c = ((MyJLabels)evt.getSource()).getColumn();
 		((MyJLabels)evt.getSource()).setBackground(new java.awt.Color(247,247,247));
 		((MyJLabels)evt.getSource()).setOpaque(true);
 	}
