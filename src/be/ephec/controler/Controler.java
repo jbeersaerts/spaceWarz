@@ -25,6 +25,7 @@ public class Controler {
 	 */
 	
 	public int putPion(AdmiralSpaceCraft pion, int x, int y){
+		if(AdmiralSpaceCraft.getNbInstance() == 1) return -1;
 		if(x > gameArea.getSide()-4) return -1;
 		for(int i = x; i<x+4; i++){
 			if(gameArea.getCase(i, y).isCannotBeUsed() == true && 
@@ -35,12 +36,14 @@ public class Controler {
 			gameArea.getCase(i ,y).setCannotBeUsed(true);
 			pion.setCase(gameArea.getCase(i, y), j);
 		}
+		AdmiralSpaceCraft.setNbInstance(AdmiralSpaceCraft.getNbInstance()+1);
 		return 0;
 	}
 	
 	public int putPion(SpaceHunter pion, int x, int y){
+		if(SpaceHunter.getNbInstance() == 2) return -1;
 		if(y > gameArea.getSide()-2) return -1;
-		for(int i = y;i<y+1;i++){
+		for(int i = y;i<y+2;i++){
 			if(gameArea.getCase(x, i).isCannotBeUsed() == true && 
 			   gameArea.getCase(x, i).getUsedBy() != null) return -1;
 		}
@@ -49,18 +52,20 @@ public class Controler {
 			gameArea.getCase(x ,i).setCannotBeUsed(true);
 			pion.setCase(gameArea.getCase(x, i), j);
 		}
+		SpaceHunter.setNbInstance(SpaceHunter.getNbInstance()+1);
 		return 0;
 	}
 
 	public int putPion(SpaceCraft pion, int x, int y){
-		if(x<1 || x > gameArea.getSide()-2) return -1;
-		if(y<1) return -1;
+		if(SpaceCraft.getNbInstance() == 2) return -1;
+		if(x<0 || x > gameArea.getSide()-2) return -1;
+		if(y<0 || y > gameArea.getSide()-2) return -1;
 		if(gameArea.getCase(x, y).isCannotBeUsed() == true && 
 		   gameArea.getCase(x, y).getUsedBy() != null) return -1;
 		if(gameArea.getCase(x+1, y).isCannotBeUsed() == true && 
 		   gameArea.getCase(x+1, y).getUsedBy() != null) return -1;
-		if(gameArea.getCase(x, y-1).isCannotBeUsed() == true && 
-		   gameArea.getCase(x, y-1).getUsedBy() != null) return -1;
+		if(gameArea.getCase(x, y+1).isCannotBeUsed() == true && 
+		   gameArea.getCase(x, y+1).getUsedBy() != null) return -1;
 			
 		gameArea.getCase(x, y).setUsedBy(pion);
 		gameArea.getCase(x ,y).setCannotBeUsed(true);
@@ -70,13 +75,15 @@ public class Controler {
 		gameArea.getCase(x+1 ,y).setCannotBeUsed(true);
 		pion.setCase(gameArea.getCase(x+1, y), 1);
 
-		gameArea.getCase(x, y-1).setUsedBy(pion);
-		gameArea.getCase(x ,y-1).setCannotBeUsed(true);
-		pion.setCase(gameArea.getCase(x, y-1), 2);
+		gameArea.getCase(x, y+1).setUsedBy(pion);
+		gameArea.getCase(x ,y+1).setCannotBeUsed(true);
+		pion.setCase(gameArea.getCase(x, y+1), 2);
+		SpaceCraft.setNbInstance(SpaceCraft.getNbInstance()+1);
 		return 0;
 	}
 	
 	public int putPion(DeathStar pion, int x, int y){
+		if(DeathStar.getNbInstance() == 1) return -1;
 		if(x<1 || x > gameArea.getSide()-2) return -1;
 		if(y<1 || y > gameArea.getSide()-2) return -1;
 		for(int i = x-1; i < x+2 ; i++){
@@ -101,12 +108,10 @@ public class Controler {
 		gameArea.getCase(x ,y+1).setCannotBeUsed(true);
 		pion.setCase(gameArea.getCase(x, y+1), 4);
 		
-		
+		DeathStar.setNbInstance(DeathStar.getNbInstance()+1);
 		
 		return 0;
 	}
-	
-	
 	/**
 	 * Method who shot on the (x;y) position
 	 * 

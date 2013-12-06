@@ -10,6 +10,8 @@ import be.ephec.model.area.Case;
 
 public class SpaceCraft extends Pion{
 	
+	private static int nbInstance;
+	
 	public SpaceCraft(){
 		setName("Vaisseau");
 		setNbCase(3);
@@ -17,5 +19,15 @@ public class SpaceCraft extends Pion{
 		setDead(false);
 		setTbCase(new Case[3]);
 	}
+
+	public static int getNbInstance() {
+		return nbInstance;
+	}
+
+	public static void setNbInstance(int nbInstance) {
+		SpaceCraft.nbInstance = nbInstance;
+	}
+	
+	
 
 }

@@ -9,6 +9,8 @@ import be.ephec.model.area.Case;
 
 public class SpaceHunter extends Pion{
 	
+	private static int nbInstance;
+	
 	public SpaceHunter(){
 		setName("Chasseur Spatial");
 		setNbCase(2);
@@ -17,4 +19,14 @@ public class SpaceHunter extends Pion{
 		setTbCase(new Case[2]);
 	}
 
+	public static int getNbInstance() {
+		return nbInstance;
+	}
+
+	public static void setNbInstance(int nbInstance) {
+		SpaceHunter.nbInstance = nbInstance;
+	}
+
+	
+	
 }

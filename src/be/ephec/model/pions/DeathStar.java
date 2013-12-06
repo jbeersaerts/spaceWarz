@@ -13,6 +13,7 @@ import be.ephec.model.area.Case;
  */
 
 public class DeathStar extends Pion {
+	private static int nbInstance;
 	
 	public DeathStar(){
 		setName("Etoile Noire");
@@ -21,4 +22,14 @@ public class DeathStar extends Pion {
 		setDead(false);
 		setTbCase(new Case[5]);
 	}
+
+	public static int getNbInstance() {
+		return nbInstance;
+	}
+
+	public static void setNbInstance(int nbInstance) {
+		DeathStar.nbInstance = nbInstance;
+	}
+	
+	
 }
