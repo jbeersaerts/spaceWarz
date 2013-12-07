@@ -44,6 +44,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 	private final int C = 10;
 	private JLabel Background;
 	private JButton Quit;
+	private JButton Reset;
 	private JLabel GrilleJoueur;
 	private JLabel GrilleAdversaire;
 	private JPanel player_responsive_grid;
@@ -108,13 +109,13 @@ public class PlayingViewNew extends javax.swing.JFrame {
 				GrilleJoueur = new JLabel();
 				Background.add(GrilleJoueur);
 				GrilleJoueur.setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/grid.png")));
-				GrilleJoueur.setBounds(126, 200, 354, 348);
+				GrilleJoueur.setBounds(126, 90, 354, 348);
 			}
 			{
 				GrilleAdversaire = new JLabel();
 				Background.add(GrilleAdversaire);
 				GrilleAdversaire.setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/grid.png")));
-				GrilleAdversaire.setBounds(520, 200, 354, 348);
+				GrilleAdversaire.setBounds(520, 90, 354, 348);
 			}
 			// Grille réactive du joueur
 			{
@@ -126,7 +127,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 				jPanel1Layout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
 				Background.add(player_responsive_grid);
 				player_responsive_grid.setLayout(jPanel1Layout);
-				player_responsive_grid.setBounds(159, 228, 310, 310);
+				player_responsive_grid.setBounds(159, 118, 310, 310);
 				{
 					for(int l=0;l<L;l++)
 						for(int c=0;c<C;c++)
@@ -166,7 +167,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 				jPanel1Layout.rowWeights = new double[] {0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1};
 				Background.add(opponent_responsive_grid);
 				opponent_responsive_grid.setLayout(jPanel1Layout);
-				opponent_responsive_grid.setBounds(553, 228, 310, 310);
+				opponent_responsive_grid.setBounds(553, 118, 310, 310);
 				{
 					for(int l=0;l<L;l++)
 						for(int c=0;c<C;c++)
@@ -187,6 +188,11 @@ public class PlayingViewNew extends javax.swing.JFrame {
 									jLabelMouseExited(evt);
 								}
 							});
+							tabJLabels2[l][c].addMouseListener(new MouseAdapter() {
+								public void mousePressed(MouseEvent evt) {
+									fire(evt);
+								}
+							});
 						}
 				}
 			}
@@ -195,31 +201,42 @@ public class PlayingViewNew extends javax.swing.JFrame {
 				vaisseaux_panel = new JPanel();
 				GridBagLayout VaisseauxLayout = new GridBagLayout();
 				VaisseauxLayout.columnWidths = new int[]{7,7,7,7};
-				VaisseauxLayout.rowHeights = new int[]{7,7};
+				VaisseauxLayout.rowHeights = new int[]{7,7,7};
 				VaisseauxLayout.columnWeights = new double[] {0.1, 0.1, 0.1, 0.1};
-				VaisseauxLayout.rowWeights = new double[]{0.1,0.1};
+				VaisseauxLayout.rowWeights = new double[]{0.1,0.1,0.1};
 				Background.add(vaisseaux_panel);
 				vaisseaux_panel.setLayout(VaisseauxLayout);
-				vaisseaux_panel.setBounds(126, 566, 464, 100);
+				vaisseaux_panel.setBounds(126, 446, 464, 100);
 				vaisseaux_panel.setOpaque(false);
 				{
 					textVaisseaux = new JLabel();
-					textVaisseaux.setText("<html><font color= #eda709 ><b>Vaisseaux disponible dans ce jeu :</b></font></html>");
+					textVaisseaux.setText("<html><font size= 4  color= #eda709 ><b>Vaisseaux disponible dans ce jeu :</b></font></html>");
 					vaisseaux_panel.add(textVaisseaux, new GridBagConstraints(0, 0, 4, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 				}
 				{
 					for(int i=0;i<4;i++) {
 						tabVaisseaux[0][i] = new MyJLabels(0,i);
 						tabVaisseaux[0][i].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship_"+(i+2)+".png")));
-						vaisseaux_panel.add(tabVaisseaux[0][i], new GridBagConstraints(i, 2, 1, 1, 0.0,0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+						vaisseaux_panel.add(tabVaisseaux[0][i], new GridBagConstraints(i, 1, 1, 1, 0.0,0.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
 						tabVaisseaux[0][i].addMouseListener(new MouseAdapter() {
 							public void mousePressed(MouseEvent evt){
 								tabVaisseauxMousePressed(evt);
 							}
-						});
-						
+						});	
 					}
 				}
+			}
+			// Bouton Reset
+			{
+				Reset = new JButton();
+				Background.add(Reset);
+				Reset.setText("Reset");
+				Reset.setBounds(375, 445, 90, 23);
+				Reset.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent evt) {
+						resetSpaceships();
+					}
+				});
 			}
 			// Bouton Quitter
 			{
@@ -329,27 +346,43 @@ public class PlayingViewNew extends javax.swing.JFrame {
 	private void tabVaisseauxMousePressed(MouseEvent evt1){
 		int c = ((MyJLabels)evt1.getSource()).getColumn();
 		choice = c;
-		/*switch(c){
-		case 0 : 
-			Pion spaceHunter;
-			System.out.println("le pion cliqué est SpaceHunter");
-			return c;
-		case 1 :
-			Pion spaceCraft;
-			System.out.println("le pion cliqué est SpaceCraft");
-			return c;
-		case 2 : 
-			Pion admiralSpaceCraft;
-			System.out.println("le pion cliqué est AdmiralSpaceCraft");
-			return c;
-		case 3 :
-			Pion deathStar;
-			System.out.println("le pion cliqué est DeathStar");
-			return c;
-		default : return -1;
-		}*/
+	}
+	
+	// FIRE
+	
+	private void fire(MouseEvent evt){
+		int l = ((MyJLabels)evt.getSource()).getLine();
+		int c = ((MyJLabels)evt.getSource()).getColumn();
 		
 		
+		if(controler.fireOnCase(c, l)!=null) {
+			tabJLabels2[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/touched.png")));
+			controler.fireOnCase(l, c).isTouch();
+		}
+		else{
+			System.out.println("Dans l'eau !");
+			tabJLabels2[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
+		}
+			
+		
+	}
+	
+	// reset
+	private void resetSpaceships(){
+		if(JOptionPane.showConfirmDialog(Background, "Etes vous sûr de vouloir réinitialiser la position de tous les vaisseaux ?")==0) {
+			for(int c=0;c<C;c++)
+				for(int l=0;l<L;l++){
+					tabJLabels[l][c].setIcon(null);
+					controler.resetPlacement();
+				}
+			SpaceHunter.setNbInstance(0);
+			SpaceCraft.setNbInstance(0);
+			AdmiralSpaceCraft.setNbInstance(0);
+			DeathStar.setNbInstance(0);			
+		}
+		
+		
+
 	}
 
 
