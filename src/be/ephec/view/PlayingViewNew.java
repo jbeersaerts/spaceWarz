@@ -373,8 +373,8 @@ public class PlayingViewNew extends javax.swing.JFrame {
 			for(int c=0;c<C;c++)
 				for(int l=0;l<L;l++){
 					tabJLabels[l][c].setIcon(null);
-					controler.resetPlacement();
 				}
+			controler.resetPlacement();
 			SpaceHunter.setNbInstance(0);
 			SpaceCraft.setNbInstance(0);
 			AdmiralSpaceCraft.setNbInstance(0);
