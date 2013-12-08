@@ -11,8 +11,7 @@ public class TestGui {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					Launcher win = new Launcher();
-				}
-			});
+				}});
 
 	}
 

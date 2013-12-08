@@ -8,14 +8,21 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
+
+import be.ephec.view.PlayingView;
 
 
 @SuppressWarnings("serial")
@@ -31,7 +38,8 @@ public class Launcher extends javax.swing.JFrame{
 	private JTextField ipAdv = new JTextField();
 	private JTextField name = new JTextField();
 	
-	private JLabel tabLabel[] = new JLabel[4]; /* 3 on first column and one on second */
+	private JLabel tabLabel[] = new JLabel[3]; /* 3 on first column and one on second */
+	private JList<String> ipList;
 	private String strJLabel[] ={
 								 "Nom : ",
 								 "Votre IP :",
@@ -41,8 +49,8 @@ public class Launcher extends javax.swing.JFrame{
 	
 	
 	public Launcher(){
-		super("My Windows");
-		this.setSize(460, 360);
+		super("SpaceWarz Launcher");
+		this.setSize(500, 400);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
@@ -112,7 +120,7 @@ public class Launcher extends javax.swing.JFrame{
                     										GridBagConstraints.CENTER,
                     										GridBagConstraints.HORIZONTAL,
                     										new Insets(0, 0, 0, 0), 0, 0));
-			gridBagCenter.add(tabLabel[3], new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+			gridBagCenter.add(ipList, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 																	GridBagConstraints.CENTER,
 																	GridBagConstraints.BOTH,
 																	new Insets(0, 0, 0, 0), 0, 0));
@@ -132,11 +140,20 @@ public class Launcher extends javax.swing.JFrame{
 		 * Should use INET ADDRESS to get the ip address
 		 * 
 		 */
-		tabLabel[3] = new JLabel();
 		try {
-			tabLabel[3].setText(Inet4Address.getLocalHost().getHostAddress());
+			
+			InetAddress tabIPlocal[] = Inet4Address.getAllByName(Inet4Address.getLocalHost().getHostName());
+			String strIpAddress[] = new String[tabIPlocal.length];
+			for(int i = 0; i< tabIPlocal.length;i++){
+				strIpAddress[i] = tabIPlocal[i].toString();
+			}
+			ListModel<String> ipModel = new DefaultComboBoxModel<String>(strIpAddress);
+			//System.out.println(strIpAddress);
+			ipList = new JList<String>();
+			ipList.setModel(ipModel);
+			
 		} catch (UnknownHostException e) {
-			tabLabel[3].setText("IP getting error");
+			
 		}
 		
 	}
@@ -149,8 +166,13 @@ public class Launcher extends javax.swing.JFrame{
 	}
 	
 	private void playButtonAction(ActionEvent evt){
-		System.out.println("Let's play a game !");
-		this.dispose();
-		JOptionPane.showMessageDialog(null, "Let's Play a Game !!");
+		//System.out.println("Let's play a game !");
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				PlayingView view = new PlayingView();
+			}});
+		this.setVisible(false);
+		//JOptionPane.showMessageDialog(null, "Let's Play a Game !!");
+		
 	}
 }
