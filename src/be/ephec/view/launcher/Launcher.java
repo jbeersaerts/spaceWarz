@@ -122,7 +122,7 @@ public class Launcher extends javax.swing.JFrame{
                     										new Insets(0, 0, 0, 0), 0, 0));
 			gridBagCenter.add(ipList, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
 																	GridBagConstraints.CENTER,
-																	GridBagConstraints.BOTH,
+																	GridBagConstraints.HORIZONTAL,
 																	new Insets(0, 0, 0, 0), 0, 0));
 		
 		
@@ -167,12 +167,7 @@ public class Launcher extends javax.swing.JFrame{
 	
 	private void playButtonAction(ActionEvent evt){
 		//System.out.println("Let's play a game !");
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				PlayingView view = new PlayingView();
-			}});
-		this.setVisible(false);
-		//JOptionPane.showMessageDialog(null, "Let's Play a Game !!");
-		
+		this.dispose();
+		JOptionPane.showMessageDialog(null, "Let's Play a Game !!");
 	}
 }

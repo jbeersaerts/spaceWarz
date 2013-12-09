@@ -29,15 +29,15 @@ public class SpaceWarz {
 			public void run() {
 				Area area = new Area(10);
 				AdmiralSpaceCraft adm = new AdmiralSpaceCraft();
-				SpaceHunter hunt = new SpaceHunter();
+				SpaceHunter hunt1 = new SpaceHunter();
 				SpaceHunter hunt2 = new SpaceHunter();
-				SpaceCraft spc = new SpaceCraft();
+				SpaceCraft spc1 = new SpaceCraft();
 				SpaceCraft spc2 = new SpaceCraft();
 				DeathStar star = new DeathStar();
-				Controler controler = new Controler(area);
-				PlayingViewNew inst = new PlayingViewNew(controler,adm,hunt,hunt2,spc,spc2,star);
-				inst.setLocationRelativeTo(null);
-				inst.setVisible(true);
+				PlayingViewNew gamingView = new PlayingViewNew();
+				Controler controler = new Controler(area, new Area(10), adm, star, spc1, spc2, hunt1, hunt2, gamingView, null);
+				gamingView.setLocationRelativeTo(null);
+				gamingView.setVisible(true);
 			}
 		});
 		
