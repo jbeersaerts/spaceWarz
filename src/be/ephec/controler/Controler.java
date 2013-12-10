@@ -32,6 +32,7 @@ public class Controler {
 	private SpaceCraft spc2;
 	private SpaceHunter hunt1;
 	private SpaceHunter hunt2;
+	private int spaceshipCounter = 0;
 	
 	/*View component*/
 	private PlayingViewNew gamingView;
@@ -308,8 +309,14 @@ public class Controler {
 	}
 	
 	private void readyEvent(ActionEvent e){
-		gameReady = true;
-		System.out.println("Les pions sont placés, le jeu peut commencer...");
+		if(spaceshipCounter==6){
+			gameReady = true;
+			JOptionPane.showMessageDialog(null, "État \"prêt\" envoyé au serveur.. \n En attente de l'adversaire..");
+			System.out.println("Les pions sont placés, le jeu peut commencer...");
+		}else{
+			JOptionPane.showMessageDialog(null, "Il vous reste "+(6-spaceshipCounter)+" vaisseaux à placer !");
+		}
+		
 	}
 	
 	
@@ -340,6 +347,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_1.png")));
 					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_2.png")));
 					System.out.println("hunt :"+hunt1.getCase(0));
+					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
 			}
@@ -348,6 +356,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_1.png")));
 					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_2.png")));
 					System.out.println("hunt2 :"+hunt2.getCase(0));
+					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
 			}
@@ -360,6 +369,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_2.png")));
 					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_3.png")));
 					System.out.println("spcCraft "+spc1.getCase(0));
+					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
 			}
@@ -369,6 +379,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_2.png")));
 					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_3.png")));
 					System.out.println("spcCraft2 "+spc2.getCase(0));
+					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
 			}
@@ -383,6 +394,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l+2][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/admiralSpaceCraft/admiralSpaceCraft_1_3.png")));
 					gamingView.getTabPlayerLabel()[l+3][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/admiralSpaceCraft/admiralSpaceCraft_1_4.png")));
 					System.out.println("adm = "+adm.getCase(0));
+					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
 			}
@@ -397,6 +409,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/DeathStar/deathStar_1_4.png")));
 					gamingView.getTabPlayerLabel()[l][c-1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/DeathStar/deathStar_1_5.png")));
 					System.out.println("star = "+star.getCase(0));
+					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
 			}
