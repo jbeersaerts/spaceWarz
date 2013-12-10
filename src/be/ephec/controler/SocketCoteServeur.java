@@ -6,30 +6,39 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class SocketCoteServeur {
-	private ObjectOutputStream oos;
-	private ObjectInputStream ois;
 	private Socket s;
-	private int num;
-	private SendedCoord c = new SendedCoord(4, 7);
-	private String receivedResponse;
+	private ObjectOutputStream oos=null;
+	private ObjectInputStream ois= null;
 	
-	public SocketCoteServeur(Socket s, int num) throws ClassNotFoundException {
-		this.s = s;
-		this.num = num;
-		try{
-			oos = new ObjectOutputStream(s.getOutputStream());
-			ois = new ObjectInputStream(s.getInputStream());
-			oos.writeObject(c);
-			System.out.println("J'écris la coordonnée "+c+" sur le socket.");
-			
-			receivedResponse = (String)ois.readObject();
-			System.out.println("Le client m'a répondu : "+receivedResponse);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public SocketCoteServeur(Socket s) throws ClassNotFoundException {
+
+		//try{
+			this.s = s;
+			//oos = new ObjectOutputStream(s.getOutputStream());    // Il n'aime pas ni oos, ni ois... ???
+			//ois = new ObjectInputStream(s.getInputStream());
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//}
 	}
-	public ObjectOutputStream getOos(){
+
+
+	public ObjectOutputStream getOos() {
 		return oos;
 	}
+
+
+	public void setOos(ObjectOutputStream oos) {
+		this.oos = oos;
+	}
+
+
+	public ObjectInputStream getOis() {
+		return ois;
+	}
+
+
+	public void setOis(ObjectInputStream ois) {
+		this.ois = ois;
+	}
+
 }

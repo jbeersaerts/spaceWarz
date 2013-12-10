@@ -1,12 +1,18 @@
 package be.ephec.controler;
 
 
+import java.awt.JobAttributes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
@@ -45,6 +51,10 @@ public class Controler {
 	private boolean gameReady = false;
 	private boolean isServer;
 	private String ipAdv;
+	
+	/* Socket */
+	Socket s;
+
 	
 	
 	
@@ -309,6 +319,7 @@ public class Controler {
 	
 	public void clientOrServer(boolean b){
 		setServer(b);
+		System.out.println("debug isServer : "+b);
 		if(getIpFromLauncher()){
 			gameLauncher.dispose();
 			gamingView.setVisible(true);
@@ -317,8 +328,29 @@ public class Controler {
 	}
 		
 	/* TO DOOO ** */
-	protected void setServer(boolean isServer) {
+	protected void setServer(boolean isServer){
 		this.isServer = isServer;
+		if(isServer){
+			try {
+				MyServer serveur = new MyServer();
+			} catch (IOException e) {
+				System.out.println("Erreur ouverture serveur.");
+			}
+			try {
+				SocketCoteServeur socket = new SocketCoteServeur(s);
+				JOptionPane.showMessageDialog(null, "Serveur créé !");
+			} catch (ClassNotFoundException e) {
+				System.out.println("Erreur creation socket serveur.");
+			}		
+		} else {
+			try {
+				MyClient client = new MyClient(ipAdv);
+				JOptionPane.showMessageDialog(null, "Client créé !");
+			} catch (IOException e) {
+				System.out.println("Erreur création socket client.");
+			}
+			
+		}
 		
 		/*
 		 * 
@@ -339,7 +371,7 @@ public class Controler {
 			return false;
 		}
 		try {
-			return ip.isReachable(10000);
+			return ip.isReachable(2000);
 		} catch (IOException e) {
 			System.out.println("PERDUUU fucking shit");
 			return false;
