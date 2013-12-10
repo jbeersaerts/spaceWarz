@@ -205,8 +205,8 @@ public class Controler {
 	}
 	
 	public String touchOrExplod(Pion touchPion){
-		if(touchPion.isDead()) return(touchPion.getName()+" a Ã©tÃ© touchÃ© et a explosÃ©");
-		return(touchPion.getName()+" a Ã©tÃ© touchÃ©");
+		if(touchPion.isDead()) return(touchPion.getName()+" a été touché et a explosé !");
+		return(touchPion.getName()+" a été touché !");
 	}
 	
 	public void resetPlacement(){
