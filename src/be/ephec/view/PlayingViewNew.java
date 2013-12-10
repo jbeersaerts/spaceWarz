@@ -42,6 +42,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 	
 	private JButton quitButton;
 	private JButton resetButton;
+	private JButton readyButton;
 	
 	
 	/*
@@ -75,8 +76,8 @@ public class PlayingViewNew extends javax.swing.JFrame {
 			 */
 			backgroundLabel = new JLabel();
 			this.setContentPane(backgroundLabel);
-			backgroundLabel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/background_all.png")));
-			backgroundLabel.setSize(1000, 800);
+			backgroundLabel.setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/background_all1.png")));
+			backgroundLabel.setSize(1000, 600);
 			backgroundLabel.setBorder(new LineBorder(new java.awt.Color(140,140,140),5, false));
 			{
 				playerGrid = new JLabel();
@@ -224,10 +225,17 @@ public class PlayingViewNew extends javax.swing.JFrame {
 			resetButton = new JButton();
 			backgroundLabel.add(resetButton);
 			resetButton.setText("Reset");
-			resetButton.setBounds(375, 445, 90, 23);
+			resetButton.setBounds(285, 445, 90, 23);
 
-			
-			
+			/*
+			 * 
+			 * Ready Button
+			 * 
+			 */
+			readyButton = new JButton();
+			backgroundLabel.add(readyButton);
+			readyButton.setText("Prêt !");
+			readyButton.setBounds(395, 445, 90, 23);
 			
 			/*
 			 * 
@@ -239,11 +247,11 @@ public class PlayingViewNew extends javax.swing.JFrame {
 			quitButton = new JButton();
 			backgroundLabel.add(quitButton);
 			quitButton.setText("Quitter");
-			quitButton.setBounds(445, 685, 90, 23);
+			quitButton.setBounds(645, 550, 90, 23);
 		}
 		this.pack();
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		setSize(1000, 800);
+		setSize(1025, 640);
 	}
 
 
@@ -276,6 +284,10 @@ public class PlayingViewNew extends javax.swing.JFrame {
 
 	public JButton getResetButton() {
 		return resetButton;
+	}
+	
+	public JButton getReadyButton() {
+		return readyButton;
 	}
 
 

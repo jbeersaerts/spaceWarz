@@ -33,11 +33,12 @@ public class Controler {
 	private SpaceHunter hunt1;
 	private SpaceHunter hunt2;
 	
-	
 	/*View component*/
 	private PlayingViewNew gamingView;
 	private Launcher gameLauncher;
 	private int choice = -1;
+	
+	private boolean gameReady = false;
 	
 	
 	
@@ -237,6 +238,12 @@ public class Controler {
 			}
 		});
 		
+		gamingView.getReadyButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				readyEvent(e);
+			}
+		});
+		
 		for(int i=0;i<4;i++){
 			gamingView.getTabVaisseaux()[0][i].addMouseListener(new MouseAdapter() {
 				public void mousePressed(MouseEvent evt){
@@ -279,6 +286,7 @@ public class Controler {
 	
 	private void quitGameEvent(ActionEvent e){
 		gamingView.dispose();
+		JOptionPane.showMessageDialog(null, "Merci d'avoir joué à notre jeu !");
 		System.exit(0);
 	}
 	
@@ -297,6 +305,11 @@ public class Controler {
 			AdmiralSpaceCraft.setNbInstance(0);
 			DeathStar.setNbInstance(0);			
 		}
+	}
+	
+	private void readyEvent(ActionEvent e){
+		gameReady = true;
+		System.out.println("Les pions sont placés, le jeu peut commencer...");
 	}
 	
 	
