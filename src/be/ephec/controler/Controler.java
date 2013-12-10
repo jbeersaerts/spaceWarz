@@ -38,7 +38,7 @@ public class Controler {
 	private Launcher gameLauncher;
 	private int choice = -1;
 	
-	private boolean gameReady = false;
+	private boolean gameReady = false; 
 	
 	
 	

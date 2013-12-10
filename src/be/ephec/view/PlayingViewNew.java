@@ -287,7 +287,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 	}
 	
 	public JButton getReadyButton() {
-		return readyButton;
+		return readyButton; 
 	}
 
 
