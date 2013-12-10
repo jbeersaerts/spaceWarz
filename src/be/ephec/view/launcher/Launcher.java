@@ -32,16 +32,18 @@ public class Launcher extends javax.swing.JFrame{
 	private JPanel gridBagCenter;
 	private JPanel borderLeft;
 	private JPanel borderRight;
+	private JButton quitButton;
+	private JButton playServerButton;
+	private JButton playClientButton;
 	
-	private static final int nbGridRow = 3;
+	
+	private static final int nbGridRow = 2;
 	
 	private JTextField ipAdv = new JTextField();
-	private JTextField name = new JTextField();
 	
 	private JLabel tabLabel[] = new JLabel[3]; /* 3 on first column and one on second */
 	private JList<String> ipList;
 	private String strJLabel[] ={
-								 "Nom : ",
 								 "Votre IP :",
 								 "IP adversaire :"
 								 };
@@ -49,11 +51,18 @@ public class Launcher extends javax.swing.JFrame{
 	
 	
 	public Launcher(){
+		
+
 		super("SpaceWarz Launcher");
 		this.setSize(500, 400);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
+		/*
+		 * 
+		 * Title Panel
+		 * 
+		 */
 		this.title = new JPanel();
 		this.title.setPreferredSize(new Dimension(250,100));
 		JLabel imgTitle = new JLabel("");
@@ -61,27 +70,45 @@ public class Launcher extends javax.swing.JFrame{
 		this.title.add(imgTitle);
 		this.getContentPane().add(this.title,BorderLayout.NORTH);
 		
+		
+		/*
+		 * 
+		 * Bottom Panel
+		 * 
+		 */
 		this.bottom = new JPanel();
 		this.bottom.setPreferredSize(new Dimension(250,50));
-		JButton playButton = new JButton();
-		JButton quitButton = new JButton();
-		playButton.setText("Jouer !");
-		playButton.addActionListener(new ActionListener() {
+		playServerButton = new JButton();
+		playServerButton.setText("Jouer (serveur) !");
+		playClientButton = new JButton();
+		playClientButton.setText("Jouer (client) !");
+		quitButton = new JButton();
+		quitButton.setText("Quitter");
+		
+		this.bottom.add(playServerButton);
+		this.bottom.add(playClientButton);
+		this.bottom.add(quitButton);
+		
+		this.getContentPane().add(this.bottom,BorderLayout.SOUTH);
+		
+		/*playButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				playButtonAction(e);				
-			}});
-		quitButton.setText("Quitter");
-		quitButton.addActionListener(new ActionListener() {
+			}});*/
+		
+		/*quitButton.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
 				quitButtonAction(e);			}
-			});
-		this.bottom.add(playButton);
-		this.bottom.add(quitButton);
-
-		this.getContentPane().add(this.bottom,BorderLayout.SOUTH);
+			});*/
 		
+		
+		/*
+		 * 
+		 * Borders left right Panel
+		 * 
+		 */
 		this.borderLeft = new JPanel();
 		borderLeft.setPreferredSize(new Dimension(20, 300));
 		this.getContentPane().add(this.borderLeft,BorderLayout.WEST);
@@ -91,36 +118,40 @@ public class Launcher extends javax.swing.JFrame{
 		this.getContentPane().add(this.borderRight,BorderLayout.EAST);
 		
 		
+		
+		/*
+		 * 
+		 * Grid Center
+		 * 
+		 */
 		this.gridBagCenter = new JPanel();
 		GridBagLayout gridBag = new GridBagLayout();
 		gridBag.columnWidths = new int[] {7, 7};
-		gridBag.rowHeights = new int[] {7, 7, 7};
+		gridBag.rowHeights = new int[] {7, 7};
 		gridBag.columnWeights = new double[] {0.1, 0.1};
-		gridBag.rowWeights = new double[] {0.1, 0.1, 0.1};
+		gridBag.rowWeights = new double[] {0.1, 0.1};
 		gridBagCenter.setLayout(gridBag);
 		this.getContentPane().add(gridBagCenter,BorderLayout.CENTER);
 			
 		/*
+		 * 
 		 * Put Component on the gridBagPanel
+		 * 
 		 */
 		
-			initTabLabel();
+			initTabLabelAndJList();
 			for(int i = 0;i<nbGridRow;i++){
 				gridBagCenter.add(tabLabel[i], new GridBagConstraints(0, i,  1, 1, 0.0, 0.0, 
-																		GridBagConstraints.WEST,
-																		GridBagConstraints.NONE,
-																		new Insets(0, 0, 0, 0), 0, 0));
+								  GridBagConstraints.WEST,
+								  GridBagConstraints.NONE,
+								  new Insets(0, 0, 0, 0), 0, 0));
 			}
-			gridBagCenter.add(name, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-					                                       GridBagConstraints.CENTER,
-					                                       GridBagConstraints.HORIZONTAL,
-					                                       new Insets(0, 0, 0, 0), 0, 0));
 
-			gridBagCenter.add(ipAdv, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
+			gridBagCenter.add(ipAdv, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
                     										GridBagConstraints.CENTER,
                     										GridBagConstraints.HORIZONTAL,
                     										new Insets(0, 0, 0, 0), 0, 0));
-			gridBagCenter.add(ipList, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
+			gridBagCenter.add(ipList, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
 																	GridBagConstraints.CENTER,
 																	GridBagConstraints.HORIZONTAL,
 																	new Insets(0, 0, 0, 0), 0, 0));
@@ -130,8 +161,8 @@ public class Launcher extends javax.swing.JFrame{
 	}
 
 	
-	private void initTabLabel(){
-		for(int i=0; i<3;i++){
+	private void initTabLabelAndJList(){
+		for(int i=0; i<2;i++){
 			tabLabel[i] = new JLabel();
 			tabLabel[i].setText(strJLabel[i]);
 		}
@@ -159,15 +190,22 @@ public class Launcher extends javax.swing.JFrame{
 	}
 
 	
-	
-	private void quitButtonAction(ActionEvent evt){
-		//System.out.println("Exit Button Activate "+evt);
-		this.dispose();
+	public JButton getQuitButton() {
+		return quitButton;
 	}
-	
-	private void playButtonAction(ActionEvent evt){
-		//System.out.println("Let's play a game !");
-		this.dispose();
-		JOptionPane.showMessageDialog(null, "Let's Play a Game !!");
+
+
+	public JButton getPlayServerButton() {
+		return playServerButton;
+	}
+
+
+	public JButton getPlayClientButton() {
+		return playClientButton;
+	}
+
+
+	public JTextField getIpAdv() {
+		return ipAdv;
 	}
 }

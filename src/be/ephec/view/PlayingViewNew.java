@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.LineBorder;
 
+import be.ephec.view.launcher.Launcher;
 import be.ephec.view.listeners.HoveringLabelListener;
 import be.ephec.view.MyJLabels;
 
@@ -47,7 +48,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 	
 	/*
 	 * Main to only launch the view without any controlers
-	 */
+	 *
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -56,7 +57,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 				inst.setVisible(true);
 			}
 		});
-	}
+	}*/
 
 	
 	public PlayingViewNew() {
@@ -299,7 +300,6 @@ public class PlayingViewNew extends javax.swing.JFrame {
 	public int getC() {
 		return C;
 	}
-	
 	
 	
 }

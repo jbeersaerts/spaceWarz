@@ -9,6 +9,7 @@ import be.ephec.model.pions.DeathStar;
 import be.ephec.model.pions.SpaceCraft;
 import be.ephec.model.pions.SpaceHunter;
 import be.ephec.view.PlayingViewNew;
+import be.ephec.view.launcher.Launcher;
 
 public class SpaceWarz {
 
@@ -34,10 +35,12 @@ public class SpaceWarz {
 				SpaceCraft spc1 = new SpaceCraft();
 				SpaceCraft spc2 = new SpaceCraft();
 				DeathStar star = new DeathStar();
+				Launcher launch = new Launcher();
 				PlayingViewNew gamingView = new PlayingViewNew();
-				Controler controler = new Controler(area, new Area(10), adm, star, spc1, spc2, hunt1, hunt2, gamingView, null);
+				gamingView.setVisible(false);
+				Controler controler = new Controler(area, new Area(10), adm, star, spc1, spc2, hunt1, hunt2, gamingView,launch);
 				gamingView.setLocationRelativeTo(null);
-				gamingView.setVisible(true);
+				
 			}
 		});
 		

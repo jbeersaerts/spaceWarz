@@ -39,7 +39,9 @@ public class Controler {
 	private Launcher gameLauncher;
 	private int choice = -1;
 	
-	private boolean gameReady = false; 
+	private boolean gameReady = false;
+	private boolean isServer;
+	private String ipAdv;
 	
 	
 	
@@ -227,6 +229,9 @@ public class Controler {
 	
 	private void addListenersOnView(){
 		
+		/*
+		 * PlayingView Listeners
+		 */
 		gamingView.getQuitButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				quitGameEvent(e);
@@ -274,10 +279,57 @@ public class Controler {
 			}
 		}
 		
+		/*
+		 * Launcher Listeners
+		 * 
+		 */
+		gameLauncher.getQuitButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				quitGameEvent(evt);				
+			}
+		});
+		
+		gameLauncher.getPlayServerButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setServer(true);
+				getIpFromLauncher();
+				gameLauncher.dispose();
+				gamingView.setVisible(true);
+			}
+		});
+		
+		gameLauncher.getPlayClientButton().addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setServer(false);
+				getIpFromLauncher();
+				gameLauncher.dispose();
+				gamingView.setVisible(true);
+				
+			}
+		});
+		
 	}
 	
 	
+	/* TO DOOO ** */
+	protected void setServer(boolean isServer) {
+		this.isServer = isServer;
+		
+		/*
+		 * 
+		 * SOCKET ICI
+		 * 
+		 */
+		
+	}
 	
+	
+	private void getIpFromLauncher(){
+		ipAdv = gameLauncher.getIpAdv().getText();
+		System.out.println(ipAdv);
+	}
+	
+
 	private void selectCraftEvent(MouseEvent evt1){
 		int c = ((MyJLabels)evt1.getSource()).getColumn();
 		choice = c;
