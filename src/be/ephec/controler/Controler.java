@@ -5,6 +5,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -291,26 +294,28 @@ public class Controler {
 		
 		gameLauncher.getPlayServerButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setServer(true);
-				getIpFromLauncher();
-				gameLauncher.dispose();
-				gamingView.setVisible(true);
+				clientOrServer(true);
 			}
 		});
 		
 		gameLauncher.getPlayClientButton().addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setServer(false);
-				getIpFromLauncher();
-				gameLauncher.dispose();
-				gamingView.setVisible(true);
-				
+				clientOrServer(false);
 			}
 		});
 		
 	}
 	
 	
+	public void clientOrServer(boolean b){
+		setServer(b);
+		if(getIpFromLauncher()){
+			gameLauncher.dispose();
+			gamingView.setVisible(true);
+		}
+		else JOptionPane.showMessageDialog(null, "Adresse Ip non valide");
+	}
+		
 	/* TO DOOO ** */
 	protected void setServer(boolean isServer) {
 		this.isServer = isServer;
@@ -324,9 +329,21 @@ public class Controler {
 	}
 	
 	
-	private void getIpFromLauncher(){
+	
+	private boolean getIpFromLauncher(){
 		ipAdv = gameLauncher.getIpAdv().getText();
-		System.out.println(ipAdv);
+		InetAddress ip;
+		try {
+			ip = InetAddress.getByName(ipAdv);
+		} catch (UnknownHostException e) {
+			return false;
+		}
+		try {
+			return ip.isReachable(10000);
+		} catch (IOException e) {
+			System.out.println("PERDUUU fucking shit");
+			return false;
+		}
 	}
 	
 
@@ -356,7 +373,8 @@ public class Controler {
 			SpaceHunter.setNbInstance(0);
 			SpaceCraft.setNbInstance(0);
 			AdmiralSpaceCraft.setNbInstance(0);
-			DeathStar.setNbInstance(0);			
+			DeathStar.setNbInstance(0);
+			spaceshipCounter = 0;
 		}
 	}
 	
