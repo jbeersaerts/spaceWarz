@@ -24,6 +24,9 @@ import be.ephec.model.pions.DeathStar;
 import be.ephec.model.pions.Pion;
 import be.ephec.model.pions.SpaceCraft;
 import be.ephec.model.pions.SpaceHunter;
+import be.ephec.net.Client;
+import be.ephec.net.Coord;
+import be.ephec.net.Serveur;
 import be.ephec.view.MyJLabels;
 import be.ephec.view.PlayingViewNew;
 import be.ephec.view.launcher.Launcher;
@@ -54,6 +57,13 @@ public class Controler {
 	
 	/* Socket */
 	Socket s;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
+	int numPort = 10430;
+	Serveur serveur = null;
+	Client client = null;
+	
+	private boolean partieFinie = false;
 
 	
 	
@@ -332,27 +342,29 @@ public class Controler {
 		this.isServer = isServer;
 		if(isServer){
 			try {
-				MyServer serveur = new MyServer();
+				//Creation du serveur
+				Serveur server = new Serveur(10430);
+				System.out.println("Server active and client accepted");
+				server.write(new String("Bienvenue sur le seveur"));				
 			} catch (IOException e) {
-				System.out.println("Erreur ouverture serveur.");
+				System.out.println("Erreur instanciation Socket");
 			}
-			try {
-				SocketCoteServeur socket = new SocketCoteServeur(s);
-				JOptionPane.showMessageDialog(null, "Serveur créé !");
-			} catch (ClassNotFoundException e) {
-				System.out.println("Erreur creation socket serveur.");
-			}		
+
 		} else {
 			try {
-				MyClient client = new MyClient(ipAdv);
-				JOptionPane.showMessageDialog(null, "Client créé !");
+				// Création du Client
+				Client client = new Client(ipAdv,10430);
+				System.out.println("Connected to server !");
+			} catch (UnknownHostException e) {
+				System.out.println("Erreur instanciation Socket");
+				e.printStackTrace();
 			} catch (IOException e) {
-				System.out.println("Erreur création socket client.");
+				System.out.println("Erreur instanciation Socket");
 			}
-			
 		}
 		
 		/*
+		 * BUG : Le programme a l'aire de tourner en boucle avec le serverSock.accept().
 		 * 
 		 * SOCKET ICI
 		 * 
@@ -415,6 +427,21 @@ public class Controler {
 			gameReady = true;
 			JOptionPane.showMessageDialog(null, "État \"prêt\" envoyé au serveur.. \n En attente de l'adversaire..");
 			System.out.println("Les pions sont placés, le jeu peut commencer...");
+			if(isServer){
+				try {
+					serveur.write(new String("Je suis prêt !"));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+			}else {
+					try {
+						client.write(new String("Je suis prêt !"));
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+			}
 		}else{
 			JOptionPane.showMessageDialog(null, "Il vous reste "+(6-spaceshipCounter)+" vaisseaux à placer !");
 		}
