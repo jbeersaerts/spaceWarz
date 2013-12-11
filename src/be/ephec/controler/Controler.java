@@ -324,60 +324,59 @@ public class Controler {
 	
 	
 	private void clientOrServer(boolean b){	
+		setServer(b);
 		if(debug)System.out.println("debug isServer : "+b);
 		if(getIpFromLauncher()){
-			setServer(b);
+			if(isServer){
+				JOptionPane.showMessageDialog(null, "En attente de la connection adverse...");
+				try {
+					//Creation du serveur
+					server = new Server(numPort);
+					if(debug) System.out.println("Server active and client accepted");
+					server.write(new String("Bienvenue sur le seveur"));				
+				} catch (IOException e) {
+					socketExceptionCatch(server);
+				}
+
+			} else {
+				
+				// Création du Client
+				try {
+					client = new Client(ipAdv,numPort);
+					String welcomStr = client.read(String.class);
+					if(debug) System.out.println("Connected to server !");
+					if(debug) System.out.println(welcomStr);
+				} catch (IOException | ClassNotFoundException e) {
+					socketExceptionCatch(client);
+				}
+			}
 			gameLauncher.dispose();
 			gamingView.setVisible(true);
 		}
 		else JOptionPane.showMessageDialog(null, "Adresse Ip non valide");
 	}
 		
-	/* TO DOOO ** */
 	private void setServer(boolean isServer){
-		this.isServer = isServer;
-		if(isServer){
-			JOptionPane.showMessageDialog(null, "En attente de la connection adverse...");
-			try {
-				//Creation du serveur
-				server = new Server(numPort);
-				if(debug) System.out.println("Server active and client accepted");
-				server.write(new String("Bienvenue sur le seveur"));				
-			} catch (IOException e) {
-				socketExceptionCatch(server);
-			}
-
-		} else {
-			
-			// Création du Client
-			try {
-				client = new Client(ipAdv,numPort);
-				String welcomStr = client.read(String.class);
-				if(debug) System.out.println("Connected to server !");
-				if(debug) System.out.println(welcomStr);
-			} catch (IOException | ClassNotFoundException e) {
-				socketExceptionCatch(client);
-			}
-		}
-		
+		this.isServer = isServer;		
 	}
 	
 	
 	
 	private boolean getIpFromLauncher(){
-		ipAdv = gameLauncher.getIpAdv().getText();
-		InetAddress ip;
+		ipAdv = gameLauncher.getIpAdv().getText();	
 		try {
-			ip = InetAddress.getByName(ipAdv);
+			@SuppressWarnings("unused")
+			InetAddress ip = InetAddress.getByName(ipAdv);
 		} catch (UnknownHostException e) {
 			return false;
 		}
-		try {
-			return ip.isReachable(2000);
+		/*try {
+			return ip.isReachable(10000);
 		} catch (IOException e) {
 			if(debug) System.out.println("not reachable");
 			return false;
-		}
+		}*/
+		return true;
 	}
 	
 
@@ -390,10 +389,12 @@ public class Controler {
 	
 	private void quitGameEvent(ActionEvent e){
 		gamingView.dispose();
-		try {
-			if(isServer)server.close();
-			else client.close();
-		} catch (IOException e1) {}
+		if(server != null && client != null){
+			try {
+				if(isServer)server.close();
+				else client.close();
+			} catch (IOException e1) {}
+		}
 		JOptionPane.showMessageDialog(null, "Merci d'avoir joué à notre jeu !");
 		System.exit(0);
 	}
