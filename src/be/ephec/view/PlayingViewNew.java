@@ -195,7 +195,7 @@ public class PlayingViewNew extends javax.swing.JFrame {
 			vaisseaux_panel.setOpaque(false);
 			{
 				textVaisseaux = new JLabel();
-				textVaisseaux.setText("<html><font size= 4  color= #eda709 ><b>Vaisseaux disponible :</b></font></html>");
+				textVaisseaux.setText("<html><font size= 4  color= #eda709 ><b>Vaisseaux disponibles :</b></font></html>");
 				vaisseaux_panel.add(textVaisseaux, 
 									new GridBagConstraints(0, 0, 4, 1, 0.0, 0.0, 
 									GridBagConstraints.CENTER, 

@@ -1,18 +1,12 @@
 package be.ephec.controler;
 
 
-import java.awt.JobAttributes;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
@@ -26,13 +20,16 @@ import be.ephec.model.pions.SpaceCraft;
 import be.ephec.model.pions.SpaceHunter;
 import be.ephec.net.Client;
 import be.ephec.net.Coord;
-import be.ephec.net.Serveur;
+import be.ephec.net.Server;
 import be.ephec.view.MyJLabels;
 import be.ephec.view.PlayingViewNew;
 import be.ephec.view.launcher.Launcher;
 
 
 public class Controler {
+	
+	/* DEBUG */
+	private boolean debug = true; /* change true to see debug line */
 	
 	/*Model component*/
 	private Area gameArea;
@@ -51,19 +48,18 @@ public class Controler {
 	private Launcher gameLauncher;
 	private int choice = -1;
 	
+	/*Controler fields*/
 	private boolean gameReady = false;
+	private boolean partieFinie = false;
 	private boolean isServer;
 	private String ipAdv;
 	
 	/* Socket */
-	Socket s;
-	ObjectOutputStream oos;
-	ObjectInputStream ois;
-	int numPort = 10430;
-	Serveur serveur = null;
-	Client client = null;
+	private int numPort = 10430;
+	private Server server = null;
+	private Client client = null;
 	
-	private boolean partieFinie = false;
+	
 
 	
 	
@@ -98,7 +94,7 @@ public class Controler {
 	 */
 	
 	
-	public int putAdmiralSpaceCraft( int x, int y){
+	private int putAdmiralSpaceCraft( int x, int y){
 		if(AdmiralSpaceCraft.getNbInstance() == 1) return -1;
 		if(x > gameArea.getSide()-4) return -1;
 		for(int i = x; i<x+4; i++){
@@ -116,7 +112,7 @@ public class Controler {
 	
 	
 	
-	public int putSpaceHunter(int x, int y){
+	private int putSpaceHunter(int x, int y){
 		if(SpaceHunter.getNbInstance() == 2) return -1;
 		if(y > gameArea.getSide()-2) return -1;
 		for(int i = y;i<y+2;i++){
@@ -141,7 +137,7 @@ public class Controler {
 	
 	
 
-	public int putSpaceCraft(int x, int y){
+	private int putSpaceCraft(int x, int y){
 		if(SpaceCraft.getNbInstance() == 2) return -1;
 		if(x<0 || x > gameArea.getSide()-2) return -1;
 		if(y<0 || y > gameArea.getSide()-2) return -1;
@@ -185,7 +181,7 @@ public class Controler {
 	
 	
 	
-	public int putDeathStar(int x, int y){
+	private int putDeathStar(int x, int y){
 		if(DeathStar.getNbInstance() == 1) return -1;
 		if(x<1 || x > gameArea.getSide()-2) return -1;
 		if(y<1 || y > gameArea.getSide()-2) return -1;
@@ -219,7 +215,7 @@ public class Controler {
 
 	
 	
-	public Pion fireOnCase(int x, int y){
+	private Pion fireOnCase(int x, int y){
 		if(gameArea.getCase(x, y).getUsedBy() != null){
 			gameArea.getCase(x, y).getUsedBy().isTouch();
 			gameArea.getCase(x, y).setTouch(true);
@@ -229,12 +225,12 @@ public class Controler {
 		return null;
 	}
 	
-	public String touchOrExplod(Pion touchPion){
+	private String touchOrExplod(Pion touchPion){
 		if(touchPion.isDead()) return(touchPion.getName()+" a été touché et a explosé !");
 		return(touchPion.getName()+" a été touché !");
 	}
 	
-	public void resetPlacement(){
+	private void resetPlacement(){
 		for(int i = 0; i<gameArea.getSide();i++){
 			for(int j = 0; j<gameArea.getSide();j++){
 				gameArea.getCase(i, j).setUsedBy(null);
@@ -327,10 +323,10 @@ public class Controler {
 	}
 	
 	
-	public void clientOrServer(boolean b){
-		setServer(b);
-		System.out.println("debug isServer : "+b);
+	private void clientOrServer(boolean b){	
+		if(debug)System.out.println("debug isServer : "+b);
 		if(getIpFromLauncher()){
+			setServer(b);
 			gameLauncher.dispose();
 			gamingView.setVisible(true);
 		}
@@ -338,37 +334,31 @@ public class Controler {
 	}
 		
 	/* TO DOOO ** */
-	protected void setServer(boolean isServer){
+	private void setServer(boolean isServer){
 		this.isServer = isServer;
 		if(isServer){
+			JOptionPane.showMessageDialog(null, "En attente de la connection adverse...");
 			try {
 				//Creation du serveur
-				Serveur server = new Serveur(10430);
-				System.out.println("Server active and client accepted");
+				server = new Server(numPort);
+				if(debug) System.out.println("Server active and client accepted");
 				server.write(new String("Bienvenue sur le seveur"));				
 			} catch (IOException e) {
-				System.out.println("Erreur instanciation Socket");
+				socketExceptionCatch(server);
 			}
 
 		} else {
+			
+			// Création du Client
 			try {
-				// Création du Client
-				Client client = new Client(ipAdv,10430);
-				System.out.println("Connected to server !");
-			} catch (UnknownHostException e) {
-				System.out.println("Erreur instanciation Socket");
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.out.println("Erreur instanciation Socket");
+				client = new Client(ipAdv,numPort);
+				String welcomStr = client.read(String.class);
+				if(debug) System.out.println("Connected to server !");
+				if(debug) System.out.println(welcomStr);
+			} catch (IOException | ClassNotFoundException e) {
+				socketExceptionCatch(client);
 			}
 		}
-		
-		/*
-		 * BUG : Le programme a l'aire de tourner en boucle avec le serverSock.accept().
-		 * 
-		 * SOCKET ICI
-		 * 
-		 */
 		
 	}
 	
@@ -385,7 +375,7 @@ public class Controler {
 		try {
 			return ip.isReachable(2000);
 		} catch (IOException e) {
-			System.out.println("PERDUUU fucking shit");
+			if(debug) System.out.println("not reachable");
 			return false;
 		}
 	}
@@ -400,6 +390,10 @@ public class Controler {
 	
 	private void quitGameEvent(ActionEvent e){
 		gamingView.dispose();
+		try {
+			if(isServer)server.close();
+			else client.close();
+		} catch (IOException e1) {}
 		JOptionPane.showMessageDialog(null, "Merci d'avoir joué à notre jeu !");
 		System.exit(0);
 	}
@@ -426,25 +420,25 @@ public class Controler {
 		if(spaceshipCounter==6){
 			gameReady = true;
 			JOptionPane.showMessageDialog(null, "État \"prêt\" envoyé au serveur.. \n En attente de l'adversaire..");
-			System.out.println("Les pions sont placés, le jeu peut commencer...");
 			if(isServer){
 				try {
-					serveur.write(new String("Je suis prêt !"));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					server.write(new String("Je suis prêt !"));
+					String str = server.read(String.class);
+					if(debug) System.out.println(str);
+				} catch (Exception e1) {
+					socketExceptionCatch(server);
 				}				
 			}else {
-					try {
-						client.write(new String("Je suis prêt !"));
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				try {
+					client.write(new String("Je suis prêt !"));
+					String str = client.read(String.class);
+					if(debug) System.out.println(str);
+				} catch (Exception e1) {
+					socketExceptionCatch(client);
+				}
 			}
-		}else{
-			JOptionPane.showMessageDialog(null, "Il vous reste "+(6-spaceshipCounter)+" vaisseaux à placer !");
-		}
+			if(debug) System.out.println("Les pions sont placés, le jeu peut commencer...");
+		}else JOptionPane.showMessageDialog(null, "Il vous reste "+(6-spaceshipCounter)+" vaisseaux à placer !");
 		
 	}
 	
@@ -455,12 +449,12 @@ public class Controler {
 		
 		
 		if(fireOnCase(l, c)!=null) {
-			System.out.println("Touché !");
+			if(debug) System.out.println("Touché !");
 			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/touched.png")));
 			fireOnCase(l, c).isTouch();
 		}
 		else{
-			System.out.println("Tir perdu dans les profondeurs de l'espace !");
+			if(debug) System.out.println("Tir perdu dans les profondeurs de l'espace !");
 			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
 		}	
 	}
@@ -475,7 +469,7 @@ public class Controler {
 				if(putSpaceHunter(l, c)==0){
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_1.png")));
 					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_2.png")));
-					System.out.println("hunt :"+hunt1.getCase(0));
+					if(debug) System.out.println("hunt :"+hunt1.getCase(0));
 					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
@@ -484,7 +478,7 @@ public class Controler {
 				if(putSpaceHunter(l, c)==0){
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_1.png")));
 					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceHunter/SpaceHunter_1_2.png")));
-					System.out.println("hunt2 :"+hunt2.getCase(0));
+					if(debug) System.out.println("hunt2 :"+hunt2.getCase(0));
 					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
@@ -497,7 +491,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_1.png")));
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_2.png")));
 					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_3.png")));
-					System.out.println("spcCraft "+spc1.getCase(0));
+					if(debug) System.out.println("spcCraft "+spc1.getCase(0));
 					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
@@ -507,7 +501,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_1.png")));
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_2.png")));
 					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/SpaceCraft_1_3.png")));
-					System.out.println("spcCraft2 "+spc2.getCase(0));
+					if(debug) System.out.println("spcCraft2 "+spc2.getCase(0));
 					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
@@ -522,7 +516,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/admiralSpaceCraft/admiralSpaceCraft_1_2.png")));
 					gamingView.getTabPlayerLabel()[l+2][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/admiralSpaceCraft/admiralSpaceCraft_1_3.png")));
 					gamingView.getTabPlayerLabel()[l+3][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/admiralSpaceCraft/admiralSpaceCraft_1_4.png")));
-					System.out.println("adm = "+adm.getCase(0));
+					if(debug) System.out.println("adm = "+adm.getCase(0));
 					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
@@ -537,7 +531,7 @@ public class Controler {
 					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/DeathStar/deathStar_1_3.png")));
 					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/DeathStar/deathStar_1_4.png")));
 					gamingView.getTabPlayerLabel()[l][c-1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/DeathStar/deathStar_1_5.png")));
-					System.out.println("star = "+star.getCase(0));
+					if(debug) System.out.println("star = "+star.getCase(0));
 					spaceshipCounter++;
 				}
 				else JOptionPane.showMessageDialog(null, "Emplacement non valide");
@@ -547,5 +541,24 @@ public class Controler {
 		}
 	}
 	
+	private void socketExceptionCatch(Server servSock){
+		if(debug) System.out.println("flow error on server socket");
+		try {
+			servSock.close();
+		} catch (IOException e) {
+			if(debug) System.out.println("error socket closing");
+		}
+		System.exit(-1);
+	}
+	
+	private void socketExceptionCatch(Client clientSock){
+		if(debug) System.out.println("flow error on client socket");
+		try {
+			clientSock.close();
+		} catch (IOException e) {
+			if(debug) System.out.println("error client socket closing");
+		}
+		System.exit(-1);
+	}
 	
 }

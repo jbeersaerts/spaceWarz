@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Serveur {
+public class Server {
 	
 	private ServerSocket serverSock;
 	private Socket socketForAccept;
@@ -14,7 +14,7 @@ public class Serveur {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	
-	public Serveur(int port) throws IOException{
+	public Server(int port) throws IOException{
 		serverSock = new ServerSocket(port);
 		System.out.println("Debug");
 		socketForAccept = serverSock.accept();

@@ -1,7 +1,10 @@
 package be.ephec.model.area;
 
+import java.io.Serializable;
 
-public class Coord {
+
+public class Coord implements Serializable{
+	private static final long serialVersionUID = 1372780970136429950L;
 	private int x;
 	private int y;
 	
