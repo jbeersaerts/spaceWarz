@@ -1,6 +1,7 @@
 package be.ephec.controler;
 
 
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,7 +14,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import be.ephec.model.area.Area;
-import be.ephec.model.area.Case;
 import be.ephec.model.area.Coord;
 import be.ephec.model.pions.AdmiralSpaceCraft;
 import be.ephec.model.pions.DeathStar;
@@ -21,7 +21,6 @@ import be.ephec.model.pions.Pion;
 import be.ephec.model.pions.SpaceCraft;
 import be.ephec.model.pions.SpaceHunter;
 import be.ephec.net.Client;
-//import be.ephec.net.Coord;
 import be.ephec.net.Server;
 import be.ephec.view.MyJLabels;
 import be.ephec.view.PlayingViewNew;
@@ -52,7 +51,7 @@ public class Controler {
 	
 	/*Controler fields*/
 	private boolean gameReady = false;
-	private boolean partieFinie = false;
+	//private boolean partieFinie = false;
 	private boolean isServer;
 	private String ipAdv;
 	
@@ -63,8 +62,8 @@ public class Controler {
 	
 	/* Fire Variable */
 	
-	private Case myTarget; // where I shoot
-	private Case opponentTarget; // Where the opponent shoot
+	private Coord myTarget; // where I shoot
+	private Coord opponentTarget; // Where the opponent shoot
 	
 
 	
@@ -226,7 +225,7 @@ public class Controler {
 			
 		// verifie si la coord recue est utilisée
 		if(gameArea.getCase(x, y).getUsedBy() != null){
-			gameArea.getCase(x, y).getUsedBy().isTouch();
+			gameArea.getCase(x, y).getUsedBy().isShooted();
 			gameArea.getCase(x, y).setTouch(true);
 			return gameArea.getCase(x, y).getUsedBy();
 		}
@@ -252,10 +251,6 @@ public class Controler {
 		}	
 	}
 	
-	private String touchOrExplod(Pion touchPion){
-		if(touchPion.isDead()) return(touchPion.getName()+" a été touché et a explosé !");
-		return(touchPion.getName()+" a été touché !");
-	}
 	
 	private void resetPlacement(){
 		for(int i = 0; i<gameArea.getSide();i++){
@@ -314,20 +309,6 @@ public class Controler {
 			}
 		}
 		
-		for(int l=0;l<gamingView.getL();l++){
-			
-			for(int c=0;c<gamingView.getC();c++){
-				gamingView.getTabOpponentLabel()[l][c].addMouseListener(new MouseAdapter() {
-					public void mousePressed(MouseEvent evt) {
-						do{
-							fireEvent(evt); // Récupere la coordonnée du tir effectué
-							if(myTarget.isTouch()) JOptionPane.showMessageDialog(null, "Ce tir a déjà été fait !");
-						}while(myTarget.isTouch());  // on peut "recliquer" si la case avait déjà été cliquée
-					}
-				});	
-			}
-		}
-		
 		/*
 		 * Launcher Listeners
 		 * 
@@ -350,6 +331,24 @@ public class Controler {
 			}
 		});
 		
+	}
+	
+	/**
+	 * 
+	 * Méthode ajoutant des listeners sur la grille de l'adversaire 
+	 * 
+	 */
+	private void addTabOpponentListener(){
+		for(int l=0;l<gamingView.getL();l++){
+			
+			for(int c=0;c<gamingView.getC();c++){
+				gamingView.getTabOpponentLabel()[l][c].addMouseListener(new MouseAdapter() {
+					public void mousePressed(MouseEvent evt) {
+							fireEvent(evt); // Récupere la coordonnée du tir effectué
+					}
+				});	
+			}
+		}
 	}
 	
 	
@@ -432,44 +431,55 @@ public class Controler {
 	
 	
 	private void resetSpaceships(){
-		if(JOptionPane.showConfirmDialog(gamingView.getBackgroundLabel(), "Etes vous sûr de vouloir réinitialiser la position de tous les vaisseaux ?")==0){
-			for(int c=0;c<gamingView.getC();c++){
-				for(int l=0;l<gamingView.getL();l++){
-					gamingView.getTabPlayerLabel()[l][c].setIcon(null);
-				}
-			}	
-			resetPlacement();
-			SpaceHunter.setNbInstance(0);
-			SpaceCraft.setNbInstance(0);
-			AdmiralSpaceCraft.setNbInstance(0);
-			DeathStar.setNbInstance(0);
-			spaceshipCounter = 0;
+		if(!gameReady){
+			if(JOptionPane.showConfirmDialog(gamingView.getBackgroundLabel(), "Etes vous sûr de vouloir réinitialiser la position de tous les vaisseaux ?")==0){
+				for(int c=0;c<gamingView.getC();c++){
+					for(int l=0;l<gamingView.getL();l++){
+						gamingView.getTabPlayerLabel()[l][c].setIcon(null);
+					}
+				}	
+				resetPlacement();
+				SpaceHunter.setNbInstance(0);
+				SpaceCraft.setNbInstance(0);
+				AdmiralSpaceCraft.setNbInstance(0);
+				DeathStar.setNbInstance(0);
+				spaceshipCounter = 0;
+			}
 		}
+		else JOptionPane.showMessageDialog(null, "Ce n'est pas bien de vouloir retirer ses vaisseaux\nen cours de partie !");
 	}
 	
 	private void readyEvent(ActionEvent e){
-		if(spaceshipCounter==6){
-			gameReady = true;
-			JOptionPane.showMessageDialog(null, "État \"prêt\" envoyé au serveur.. \n En attente de l'adversaire..");
-			if(isServer){
-				try {
-					server.write(new String("Je suis prêt !"));
-					String str = server.read(String.class);
-					if(debug) System.out.println(str);
-				} catch (Exception e1) {
-					socketExceptionCatch(server);
-				}				
-			}else {
-				try {
-					client.write(new String("Je suis prêt !"));
-					String str = client.read(String.class);
-					if(debug) System.out.println(str);
-				} catch (Exception e1) {
-					socketExceptionCatch(client);
+		if(!gameReady){
+			if(spaceshipCounter==6){
+				gameReady = true;
+				addTabOpponentListener();
+				JOptionPane.showMessageDialog(null, "État \"prêt\" envoyé au serveur.. \n En attente de l'adversaire..");
+				if(isServer){
+					try {
+						server.write(new String("Je suis prêt !"));
+						String str = server.read(String.class);
+						if(debug) System.out.println(str);
+						if(debug) System.out.println("Les pions sont placés, le jeu peut commencer...");
+						JOptionPane.showMessageDialog(null, "A vous de jouer");
+					} catch (Exception e1) {
+						socketExceptionCatch(server);
+					}				
+				}else {
+					try {
+						client.write(new String("Je suis prêt !"));
+						String str = client.read(String.class);
+						if(debug) System.out.println(str);
+						if(debug) System.out.println("Les pions sont placés, le jeu peut commencer...");
+						clientReception(); /* Vu que le serveur commence le premier à jouer, le client lance déja une lecture bloquante qui attend la coordonnée du serveur */
+					} catch (Exception e1) {
+						socketExceptionCatch(client);
+					}
 				}
-			}
-			if(debug) System.out.println("Les pions sont placés, le jeu peut commencer...");
-		}else JOptionPane.showMessageDialog(null, "Il vous reste "+(6-spaceshipCounter)+" vaisseaux à placer !");
+				
+			}else JOptionPane.showMessageDialog(null, "Il vous reste "+(6-spaceshipCounter)+" vaisseaux à placer !");
+		}
+		else JOptionPane.showMessageDialog(null, "Vous êtes déja prêt !");
 		
 	}
 	
@@ -478,8 +488,24 @@ public class Controler {
 		int l = ((MyJLabels)evt.getSource()).getLine();
 		int c = ((MyJLabels)evt.getSource()).getColumn();
 		
-		Coord myTargetPosition = new Coord(l,c); // créé une coordonnée du clic
-		myTarget.setPosition(myTargetPosition); // crée l'objet myTarget qui sera utilisée dans fireAction
+		myTarget = new Coord(l,c);
+		if(opponentArea.getCase(l, c).isTouch()) {
+			JOptionPane.showMessageDialog(null, "Ce tir a déjà été fait !");
+			if(debug) System.out.println("Coordonnée déja victime de violence");
+		}
+		else{ /* Implementation communication */
+			opponentArea.getCase(l, c).setTouch(true);
+			if(debug) System.out.println("Coordonnée pas encore martirisée");
+			if(isServer){
+				serverSend();
+				serverReception();
+			}
+			else{
+				clientSend();
+				clientReception();
+			}
+			
+		}
 		
 		/*if(fireOnCase(l, c)!=null) {
 			if(debug) System.out.println("Touché !");
@@ -492,6 +518,9 @@ public class Controler {
 		}*/	
 	}
 	
+	
+	
+	/*
 	private void fireAction(){
 		if(isServer){
 			//implementé par john
@@ -520,15 +549,78 @@ public class Controler {
 						}
 					}
 				} catch (ClassNotFoundException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
 				}				
 			}
 		}
+	}*/
+	
+	
+	private void clientReception(){
+		try {
+			opponentTarget = client.read(Coord.class);
+			Pion touchPion = fireOnCase(opponentTarget.getX(),opponentTarget.getY()); // Sort le pion qui est touché (peut-etre null)
+			if(touchPion != null){ //  si un pion existe à cet endroit
+				modifyImage(true, opponentTarget, true);
+				client.write(true); // envoi la position du tir reçu
+				client.write(touchPion.getName()); // .. et le nom du pion qui est touché
+			} else {
+				modifyImage(true, opponentTarget, false); // indique dans la grille du joueur où l'adversaire vient de tirer
+				client.write(false);  // si pas de vaisseaux touché
+			}
+		} catch (ClassNotFoundException | IOException e) {
+			socketExceptionCatch(client);
+		}	
 	}
 	
+	private void serverReception(){
+		try {
+			opponentTarget = server.read(Coord.class);
+			Pion touchPion = fireOnCase(opponentTarget.getX(),opponentTarget.getY()); // Sort le pion qui est touché (peut-etre null)
+			if(touchPion != null){ //  si un pion existe à cet endroit
+				modifyImage(true, opponentTarget, true);
+				server.write(true); // envoi la position du tir reçu
+				server.write(touchPion.getName()); // .. et le nom du pion qui est touché
+			} else {
+				modifyImage(true, opponentTarget, false); // indique dans la grille du joueur où l'adversaire vient de tirer
+				server.write(false);  // si pas de vaisseaux touché
+			}
+		} catch (ClassNotFoundException | IOException e) {
+			socketExceptionCatch(server);
+		}	
+	}
+
+	private void clientSend(){
+		try {
+			client.write(myTarget);
+			if(client.read(boolean.class)) { // Lit la réponse suite au tir
+				modifyImage(false, myTarget, true);
+				JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+client.read(String.class));
+			} else {
+				modifyImage(false, myTarget, false);
+				JOptionPane.showMessageDialog(null, "Votre tir s'est perdu dans les profondeurs de l'espace...");
+			}
+		} catch (IOException | HeadlessException | ClassNotFoundException e) {
+			socketExceptionCatch(client);
+		}
+	}
 	
-	private void putPionViewEvent(MouseEvent evt) {
+	private void serverSend(){
+		try {
+			server.write(myTarget);
+			if(server.read(boolean.class)) { // Lit la réponse suite au tir
+				modifyImage(false, myTarget, true);
+				JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+server.read(String.class));
+			} else {
+				modifyImage(false, myTarget, false);
+				JOptionPane.showMessageDialog(null, "Votre tir s'est perdu dans les profondeurs de l'espace...");
+			}
+		} catch (IOException | HeadlessException | ClassNotFoundException e) {
+			socketExceptionCatch(server);
+		}
+	}
+	
+ 	private void putPionViewEvent(MouseEvent evt) {
 		int l = ((MyJLabels)evt.getSource()).getLine();
 		int c = ((MyJLabels)evt.getSource()).getColumn();
 		switch(choice){

@@ -59,7 +59,7 @@ public class Pion {
 		this.tbCase[i] = c;
 	}
 	
-	public void isTouch(){
+	public void isShooted(){
 		nbVie = nbVie -1;
 		updateDeadAfterTouch();
 	}
