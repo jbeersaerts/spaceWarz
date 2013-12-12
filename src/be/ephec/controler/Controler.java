@@ -53,6 +53,8 @@ public class Controler {
 	private boolean partieFinie = false;
 	private boolean isServer;
 	private String ipAdv;
+	private Coord myTarget;
+	private Coord opponentTarget;
 	
 	/* Socket */
 	private int numPort = 10430;
@@ -476,16 +478,7 @@ public class Controler {
 		int l = ((MyJLabels)evt.getSource()).getLine();
 		int c = ((MyJLabels)evt.getSource()).getColumn();
 		
-		
-		if(fireOnCase(l, c)!=null) {
-			if(debug) System.out.println("Touché !");
-			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/touched.png")));
-			fireOnCase(l, c).isTouch();
-		}
-		else{
-			if(debug) System.out.println("Tir perdu dans les profondeurs de l'espace !");
-			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
-		}	
+		myTarget = new Coord(l,c);
 	}
 	
 	
