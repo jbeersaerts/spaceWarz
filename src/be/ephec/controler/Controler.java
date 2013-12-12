@@ -216,6 +216,34 @@ public class Controler {
 	
 	
 	private Pion fireOnCase(int x, int y){
+		Coord c=null;
+		if(isServer){
+			try {
+				server.write(new Coord(x,y));
+				c = server.read(Coord.class);
+				if(debug) System.out.println(c);
+			} catch (Exception e1) {
+				socketExceptionCatch(server);
+			}				
+		}else {
+			try {
+				client.write(new Coord(x,y));
+				c = client.read(Coord.class);
+				if(debug) System.out.println(c);
+			} catch (Exception e1) {
+				socketExceptionCatch(client);
+			}
+		}
+		
+		// verifie si la coord recue est utilisée
+		/*if(gameArea.getCase(c.getX(), c.getY()).getUsedBy() != null){
+			gameArea.getCase(c.getX(), c.getY()).getUsedBy().isTouch();
+			gameArea.getCase(c.getX(), c.getY()).setTouch(true);
+			return gameArea.getCase(c.getX(), c.getY()).getUsedBy();
+		}
+		gameArea.getCase(c.getX(), c.getY()).setTouch(true);
+		return null;*/
+		
 		if(gameArea.getCase(x, y).getUsedBy() != null){
 			gameArea.getCase(x, y).getUsedBy().isTouch();
 			gameArea.getCase(x, y).setTouch(true);
