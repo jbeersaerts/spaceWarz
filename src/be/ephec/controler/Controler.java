@@ -13,13 +13,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import be.ephec.model.area.Area;
+import be.ephec.model.area.Case;
+import be.ephec.model.area.Coord;
 import be.ephec.model.pions.AdmiralSpaceCraft;
 import be.ephec.model.pions.DeathStar;
 import be.ephec.model.pions.Pion;
 import be.ephec.model.pions.SpaceCraft;
 import be.ephec.model.pions.SpaceHunter;
 import be.ephec.net.Client;
-import be.ephec.net.Coord;
+//import be.ephec.net.Coord;
 import be.ephec.net.Server;
 import be.ephec.view.MyJLabels;
 import be.ephec.view.PlayingViewNew;
@@ -53,14 +55,16 @@ public class Controler {
 	private boolean partieFinie = false;
 	private boolean isServer;
 	private String ipAdv;
-	private Coord myTarget;
-	private Coord opponentTarget;
 	
 	/* Socket */
 	private int numPort = 10430;
 	private Server server = null;
 	private Client client = null;
 	
+	/* Fire Variable */
+	
+	private Case myTarget; // where I shoot
+	private Case opponentTarget; // Where the opponent shoot
 	
 
 	
@@ -218,34 +222,9 @@ public class Controler {
 	
 	
 	private Pion fireOnCase(int x, int y){
-		Coord c=null;
-		if(isServer){
-			try {
-				server.write(new Coord(x,y));
-				c = server.read(Coord.class);
-				if(debug) System.out.println(c);
-			} catch (Exception e1) {
-				socketExceptionCatch(server);
-			}				
-		}else {
-			try {
-				client.write(new Coord(x,y));
-				c = client.read(Coord.class);
-				if(debug) System.out.println(c);
-			} catch (Exception e1) {
-				socketExceptionCatch(client);
-			}
-		}
 		
+			
 		// verifie si la coord recue est utilisée
-		/*if(gameArea.getCase(c.getX(), c.getY()).getUsedBy() != null){
-			gameArea.getCase(c.getX(), c.getY()).getUsedBy().isTouch();
-			gameArea.getCase(c.getX(), c.getY()).setTouch(true);
-			return gameArea.getCase(c.getX(), c.getY()).getUsedBy();
-		}
-		gameArea.getCase(c.getX(), c.getY()).setTouch(true);
-		return null;*/
-		
 		if(gameArea.getCase(x, y).getUsedBy() != null){
 			gameArea.getCase(x, y).getUsedBy().isTouch();
 			gameArea.getCase(x, y).setTouch(true);
@@ -253,6 +232,24 @@ public class Controler {
 		}
 		gameArea.getCase(x, y).setTouch(true);
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param grille : true pour la grille du joueur, false pour la grille adverse
+	 * @param c : coordonnées du tir
+	 * @param touch : true si touché, false si dans l'eau
+	 */
+	private void modifyImage(boolean joueur, Coord coord, boolean touch){
+		int l = coord.getX(); // Récupère la ligne et la colonne de l'image à modifier
+		int c = coord.getY();
+		if(joueur){
+			if(touch) gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship_touched.png")));
+			else gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
+		} else {
+			if(touch) gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship_touched.png")));
+			else gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
+		}	
 	}
 	
 	private String touchOrExplod(Pion touchPion){
@@ -322,7 +319,10 @@ public class Controler {
 			for(int c=0;c<gamingView.getC();c++){
 				gamingView.getTabOpponentLabel()[l][c].addMouseListener(new MouseAdapter() {
 					public void mousePressed(MouseEvent evt) {
-						fireEvent(evt);
+						do{
+							fireEvent(evt); // Récupere la coordonnée du tir effectué
+							if(myTarget.isTouch()) JOptionPane.showMessageDialog(null, "Ce tir a déjà été fait !");
+						}while(myTarget.isTouch());  // on peut "recliquer" si la case avait déjà été cliquée
 					}
 				});	
 			}
@@ -478,7 +478,53 @@ public class Controler {
 		int l = ((MyJLabels)evt.getSource()).getLine();
 		int c = ((MyJLabels)evt.getSource()).getColumn();
 		
-		myTarget = new Coord(l,c);
+		Coord myTargetPosition = new Coord(l,c); // créé une coordonnée du clic
+		myTarget.setPosition(myTargetPosition); // crée l'objet myTarget qui sera utilisée dans fireAction
+		
+		/*if(fireOnCase(l, c)!=null) {
+			if(debug) System.out.println("Touché !");
+			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/touched.png")));
+			fireOnCase(l, c).isTouch();
+		}
+		else{
+			if(debug) System.out.println("Tir perdu dans les profondeurs de l'espace !");
+			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
+		}*/	
+	}
+	
+	private void fireAction(){
+		if(isServer){
+			//implementé par john
+		} else {
+			while(!partieFinie){
+				try {
+					opponentTarget = client.read(Case.class); // Lis la case que vise l'adversaire
+					Pion touchPion = fireOnCase(opponentTarget.getPosition().getX(),opponentTarget.getPosition().getY()); // Sort le pion qui est touché (peut-etre null)
+					if(touchPion != null){ //  si un pion existe à cet endroit
+						client.write(opponentTarget.getPosition()); // envoi la position du tir reçu
+						client.write(touchPion.getName()); // .. et le nom du pion qui est touché
+						modifyImage(true, opponentTarget.getPosition(), true);
+					} else {
+						client.write(false);  // si pas de vaisseaux touché
+						modifyImage(true, opponentTarget.getPosition(), false); // indique dans la grille du joueur où l'adversaire vient de tirer
+					}
+					if(!partieFinie){
+						// Le do ... while est mis dans le mouse listener (pas sur que ça soit tip top correct...
+						client.write(myTarget.getPosition());
+						if(client.read(boolean.class)) { // Lit la réponse suite au tir
+							JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+client.read(String.class));
+							modifyImage(false, myTarget.getPosition(), true);
+						} else {
+							JOptionPane.showMessageDialog(null, "Votre tir s'est perdu dans les profondeurs de l'espace...");
+							modifyImage(false, myTarget.getPosition(), false);
+						}
+					}
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}
 	}
 	
 	
