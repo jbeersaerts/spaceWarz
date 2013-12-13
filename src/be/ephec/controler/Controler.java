@@ -730,6 +730,7 @@ public class Controler {
 			}
 			else JOptionPane.showMessageDialog(null, "Nombre de vaisseau maximum atteind sur la grille");
 			break;
+		default : JOptionPane.showMessageDialog(null, "Choisissez un pion sous la grille.");
 		}
 	}
 	
