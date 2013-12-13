@@ -54,6 +54,8 @@ public class Controler {
 	//private boolean partieFinie = false;
 	private boolean isServer;
 	private String ipAdv;
+	private int nbVieTotal; // variable qui servira à savoir où on en est dans la partie
+	private int nbVieAdvers; // pour savoir quand on gagne
 	
 	/* Socket */
 	private int numPort = 10430;
@@ -112,6 +114,7 @@ public class Controler {
 			adm.setCase(gameArea.getCase(i, y), j);
 		}
 		AdmiralSpaceCraft.setNbInstance(AdmiralSpaceCraft.getNbInstance()+1);
+		nbVieTotal = nbVieTotal+4;
 		return 0;
 	}
 	
@@ -137,6 +140,7 @@ public class Controler {
 			}
 		}
 		SpaceHunter.setNbInstance(SpaceHunter.getNbInstance()+1);
+		nbVieTotal = nbVieTotal+2;
 		return 0;
 	}
 	
@@ -180,6 +184,7 @@ public class Controler {
 			spc2.setCase(gameArea.getCase(x, y+1), 2);
 		}
 		SpaceCraft.setNbInstance(SpaceCraft.getNbInstance()+1);
+		nbVieTotal = nbVieTotal+3;
 		return 0;
 	}
 	
@@ -213,7 +218,7 @@ public class Controler {
 		star.setCase(gameArea.getCase(x, y+1), 4);
 		
 		DeathStar.setNbInstance(DeathStar.getNbInstance()+1);
-		
+		nbVieTotal = nbVieTotal+5;
 		return 0;
 	}
 	
@@ -257,6 +262,7 @@ public class Controler {
 			for(int j = 0; j<gameArea.getSide();j++){
 				gameArea.getCase(i, j).setUsedBy(null);
 				gameArea.getCase(i, j).setCannotBeUsed(false);
+				nbVieTotal=0;
 			}
 		}
 	}
@@ -344,7 +350,9 @@ public class Controler {
 			for(int c=0;c<gamingView.getC();c++){
 				gamingView.getTabOpponentLabel()[l][c].addMouseListener(new MouseAdapter() {
 					public void mousePressed(MouseEvent evt) {
-							fireEvent(evt); // Récupere la coordonnée du tir effectué
+						myTarget =null;
+						fireEvent(evt); // Récupere la coordonnée du tir effectué
+					
 					}
 				});	
 			}
@@ -453,6 +461,8 @@ public class Controler {
 		if(!gameReady){
 			if(spaceshipCounter==6){
 				gameReady = true;
+				nbVieAdvers = 19;
+				if(debug) System.out.println("nombre de vie total : "+nbVieTotal);
 				addTabOpponentListener();
 				JOptionPane.showMessageDialog(null, "État \"prêt\" envoyé au serveur.. \n En attente de l'adversaire..");
 				if(isServer){
@@ -485,27 +495,29 @@ public class Controler {
 	
 	
 	private void fireEvent(MouseEvent evt){
-		int l = ((MyJLabels)evt.getSource()).getLine();
-		int c = ((MyJLabels)evt.getSource()).getColumn();
-		
-		myTarget = new Coord(l,c);
-		if(opponentArea.getCase(l, c).isTouch()) {
-			JOptionPane.showMessageDialog(null, "Ce tir a déjà été fait !");
-			if(debug) System.out.println("Coordonnée déja victime de violence");
-		}
-		else{ /* Implementation communication */
-			opponentArea.getCase(l, c).setTouch(true);
-			if(debug) System.out.println("Coordonnée pas encore martirisée");
-			if(isServer){
-				serverSend();
-				serverReception();
-			}
-			else{
-				clientSend();
-				clientReception();
-			}
 			
-		}
+			int l = ((MyJLabels)evt.getSource()).getLine();
+			int c = ((MyJLabels)evt.getSource()).getColumn();
+			
+			myTarget = new Coord(l,c);
+			if(opponentArea.getCase(l, c).isTouch()) {
+				JOptionPane.showMessageDialog(null, "Ce tir a déjà été fait !");
+				if(debug) System.out.println("Coordonnée déja victime de violence");
+			}
+			else{ /* Implementation communication */
+				opponentArea.getCase(l, c).setTouch(true);
+				if(debug) System.out.println("Coordonnée pas encore martirisée");
+				if(isServer){
+					serverSend();
+					serverReception();
+				}
+				else{
+					clientSend();
+					clientReception();
+				}
+			}
+				
+		
 		
 		/*if(fireOnCase(l, c)!=null) {
 			if(debug) System.out.println("Touché !");
@@ -562,15 +574,20 @@ public class Controler {
 			Pion touchPion = fireOnCase(opponentTarget.getX(),opponentTarget.getY()); // Sort le pion qui est touché (peut-etre null)
 			if(touchPion != null){ //  si un pion existe à cet endroit
 				modifyImage(true, opponentTarget, true);
-				client.write(true); // envoi la position du tir reçu
+				client.write(true); // envoi que c'est touché
 				client.write(touchPion.getName()); // .. et le nom du pion qui est touché
+				nbVieTotal=nbVieTotal-1; // retire 1 pt de vie total
 			} else {
 				modifyImage(true, opponentTarget, false); // indique dans la grille du joueur où l'adversaire vient de tirer
 				client.write(false);  // si pas de vaisseaux touché
 			}
 		} catch (ClassNotFoundException | IOException e) {
 			socketExceptionCatch(client);
-		}	
+		}
+		if(nbVieTotal<=0){
+			JOptionPane.showMessageDialog(null, "Désolé, mais vous avez perdu..");
+			gamingView.dispose();
+		}
 	}
 	
 	private void serverReception(){
@@ -579,14 +596,19 @@ public class Controler {
 			Pion touchPion = fireOnCase(opponentTarget.getX(),opponentTarget.getY()); // Sort le pion qui est touché (peut-etre null)
 			if(touchPion != null){ //  si un pion existe à cet endroit
 				modifyImage(true, opponentTarget, true);
-				server.write(true); // envoi la position du tir reçu
+				server.write(true); // envoi que c'est touché
 				server.write(touchPion.getName()); // .. et le nom du pion qui est touché
+				nbVieTotal=nbVieTotal-1; // retire 1 pt de vie total
 			} else {
 				modifyImage(true, opponentTarget, false); // indique dans la grille du joueur où l'adversaire vient de tirer
 				server.write(false);  // si pas de vaisseaux touché
 			}
 		} catch (ClassNotFoundException | IOException e) {
 			socketExceptionCatch(server);
+		}	
+		if(nbVieTotal<=0){
+			JOptionPane.showMessageDialog(null, "Désolé, mais vous avez perdu..");
+			gamingView.dispose();
 		}	
 	}
 
@@ -596,12 +618,17 @@ public class Controler {
 			if(client.read(boolean.class)) { // Lit la réponse suite au tir
 				modifyImage(false, myTarget, true);
 				JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+client.read(String.class));
+				nbVieAdvers=nbVieAdvers-1;
 			} else {
 				modifyImage(false, myTarget, false);
 				JOptionPane.showMessageDialog(null, "Votre tir s'est perdu dans les profondeurs de l'espace...");
 			}
 		} catch (IOException | HeadlessException | ClassNotFoundException e) {
 			socketExceptionCatch(client);
+		}
+		if(nbVieAdvers<=0){
+			JOptionPane.showMessageDialog(null, "Bravo !\n Vous avez gagné la partie");
+			gamingView.dispose();
 		}
 	}
 	
@@ -611,12 +638,17 @@ public class Controler {
 			if(server.read(boolean.class)) { // Lit la réponse suite au tir
 				modifyImage(false, myTarget, true);
 				JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+server.read(String.class));
+				nbVieAdvers=nbVieAdvers-1;
 			} else {
 				modifyImage(false, myTarget, false);
 				JOptionPane.showMessageDialog(null, "Votre tir s'est perdu dans les profondeurs de l'espace...");
 			}
 		} catch (IOException | HeadlessException | ClassNotFoundException e) {
 			socketExceptionCatch(server);
+		}
+		if(nbVieAdvers<=0){
+			JOptionPane.showMessageDialog(null, "Bravo !\n Vous avez gagné la partie");
+			gamingView.dispose();
 		}
 	}
 	
