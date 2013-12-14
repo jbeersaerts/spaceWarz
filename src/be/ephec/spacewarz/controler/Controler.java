@@ -51,14 +51,12 @@ public class Controler {
 	
 	/*Controler fields*/
 	private boolean gameReady = false;
-	//private boolean partieFinie = false;
 	private boolean isServer;
 	private String ipAdv;
 	private int nbVieTotal; // variable qui servira à savoir où on en est dans la partie
 	private int nbVieAdvers; // pour savoir quand on gagne
 	
 	/* Socket */
-	private int numPort = 10430;
 	private Server server = null;
 	private Client client = null;
 	
@@ -365,21 +363,20 @@ public class Controler {
 		if(debug)System.out.println("debug isServer : "+b);
 		if(getIpFromLauncher()){
 			if(isServer){
-				JOptionPane.showMessageDialog(null, "En attente de la connection adverse...");
 				try {
 					//Creation du serveur
-					server = new Server(numPort);
+					server = new Server();
 					if(debug) System.out.println("Server active and client accepted");
 					server.write(new String("Bienvenue sur le seveur"));				
 				} catch (IOException e) {
 					socketExceptionCatch(server);
 				}
-
+				
 			} else {
 				
 				// Création du Client
 				try {
-					client = new Client(ipAdv,numPort);
+					client = new Client(ipAdv,Integer.parseInt(gameLauncher.getNumPortServer().getText()));
 					String welcomStr = client.read(String.class);
 					if(debug) System.out.println("Connected to server !");
 					if(debug) System.out.println(welcomStr);
@@ -389,6 +386,7 @@ public class Controler {
 			}
 			gameLauncher.dispose();
 			gamingView.setVisible(true);
+			JOptionPane.showMessageDialog(null, "Connexion établie !\nVous pouvez placer vos vaisseaux");
 		}
 		else JOptionPane.showMessageDialog(null, "Adresse Ip non valide");
 	}
@@ -407,12 +405,6 @@ public class Controler {
 		} catch (UnknownHostException e) {
 			return false;
 		}
-		/*try {
-			return ip.isReachable(10000);
-		} catch (IOException e) {
-			if(debug) System.out.println("not reachable");
-			return false;
-		}*/
 		return true;
 	}
 	
@@ -494,6 +486,7 @@ public class Controler {
 	}
 	
 	
+	
 	private void fireEvent(MouseEvent evt){
 			
 			int l = ((MyJLabels)evt.getSource()).getLine();
@@ -529,43 +522,7 @@ public class Controler {
 			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
 		}*/	
 	}
-	
-	
-	
-	/*
-	private void fireAction(){
-		if(isServer){
-			//implementé par john
-		} else {
-			while(!partieFinie){
-				try {
-					opponentTarget = client.read(Case.class); // Lis la case que vise l'adversaire
-					Pion touchPion = fireOnCase(opponentTarget.getPosition().getX(),opponentTarget.getPosition().getY()); // Sort le pion qui est touché (peut-etre null)
-					if(touchPion != null){ //  si un pion existe à cet endroit
-						client.write(opponentTarget.getPosition()); // envoi la position du tir reçu
-						client.write(touchPion.getName()); // .. et le nom du pion qui est touché
-						modifyImage(true, opponentTarget.getPosition(), true);
-					} else {
-						client.write(false);  // si pas de vaisseaux touché
-						modifyImage(true, opponentTarget.getPosition(), false); // indique dans la grille du joueur où l'adversaire vient de tirer
-					}
-					if(!partieFinie){
-						// Le do ... while est mis dans le mouse listener (pas sur que ça soit tip top correct...
-						client.write(myTarget.getPosition());
-						if(client.read(boolean.class)) { // Lit la réponse suite au tir
-							JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+client.read(String.class));
-							modifyImage(false, myTarget.getPosition(), true);
-						} else {
-							JOptionPane.showMessageDialog(null, "Votre tir s'est perdu dans les profondeurs de l'espace...");
-							modifyImage(false, myTarget.getPosition(), false);
-						}
-					}
-				} catch (ClassNotFoundException | IOException e) {
-					
-				}				
-			}
-		}
-	}*/
+
 	
 	
 	private void clientReception(){
@@ -588,6 +545,11 @@ public class Controler {
 		}
 		if(nbVieTotal<=0){
 			JOptionPane.showMessageDialog(null, "Désolé, mais vous avez perdu..");
+			try {
+				client.close();
+			} catch (IOException e) {
+				socketExceptionCatch(client);
+			}
 			gamingView.dispose();
 		}
 	}
@@ -612,6 +574,11 @@ public class Controler {
 		}	
 		if(nbVieTotal<=0){
 			JOptionPane.showMessageDialog(null, "Désolé, mais vous avez perdu..");
+			try {
+				server.close();
+			} catch (IOException e) {
+				socketExceptionCatch(server);
+			}
 			gamingView.dispose();
 		}	
 	}

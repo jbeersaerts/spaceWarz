@@ -6,6 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import javax.swing.JOptionPane;
+
 public class Server {
 	
 	private ServerSocket serverSock;
@@ -14,15 +16,28 @@ public class Server {
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	
-	public Server(int port) throws IOException{
-		serverSock = new ServerSocket(port);
-		System.out.println("Debug");
-		socketForAccept = serverSock.accept();
-		
-		out = new ObjectOutputStream(socketForAccept.getOutputStream());
-			out.flush();
-		
-		in = new ObjectInputStream(socketForAccept.getInputStream());
+	private int numPort = 2014;
+	
+	public Server(){
+		boolean connected = false;
+		do{
+			try {
+				serverSock = new ServerSocket(numPort);
+				System.out.println("Debug");
+				JOptionPane.showMessageDialog(null, "Serveur à l'écoute sur le port "+numPort);
+				socketForAccept = serverSock.accept();
+				
+				out = new ObjectOutputStream(socketForAccept.getOutputStream());
+					out.flush();
+				
+				in = new ObjectInputStream(socketForAccept.getInputStream());
+				
+				connected = true;
+			} catch (IOException e) {
+				System.out.println(numPort+" occupé, essai d'un autre port");
+				numPort++;
+			}
+		}while(!connected);
 	}
 	
 	public <E> void write(E obj) throws IOException{

@@ -31,15 +31,17 @@ public class Launcher extends javax.swing.JFrame{
 	private JButton playClientButton;
 	
 	
-	private static final int nbGridRow = 2;
+	private static final int nbGridRow = 3;
 	
 	private JTextField ipAdv = new JTextField();
+	private JTextField numPortServer = new JTextField() ;
 	
-	private JLabel tabLabel[] = new JLabel[3]; /* 3 on first column and one on second */
+	private JLabel tabLabel[] = new JLabel[3]; /* 3 on first column */
 	private JList<String> ipList;
 	private String strJLabel[] ={
 								 "Votre IP :",
-								 "IP adversaire :"
+								 "IP adversaire :",
+								 "N°port serveur"
 								 };
 	
 	
@@ -121,9 +123,9 @@ public class Launcher extends javax.swing.JFrame{
 		this.gridBagCenter = new JPanel();
 		GridBagLayout gridBag = new GridBagLayout();
 		gridBag.columnWidths = new int[] {7, 7};
-		gridBag.rowHeights = new int[] {7, 7};
+		gridBag.rowHeights = new int[] {7, 7, 7};
 		gridBag.columnWeights = new double[] {0.1, 0.1};
-		gridBag.rowWeights = new double[] {0.1, 0.1};
+		gridBag.rowWeights = new double[] {0.1, 0.1, 0.1};
 		gridBagCenter.setLayout(gridBag);
 		this.getContentPane().add(gridBagCenter,BorderLayout.CENTER);
 			
@@ -141,14 +143,20 @@ public class Launcher extends javax.swing.JFrame{
 								  new Insets(0, 0, 0, 0), 0, 0));
 			}
 
+			gridBagCenter.add(ipList, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
+							  GridBagConstraints.CENTER,
+							  GridBagConstraints.HORIZONTAL,
+							  new Insets(0, 0, 0, 0), 0, 0));
+			
 			gridBagCenter.add(ipAdv, new GridBagConstraints(1, 1, 1, 1, 0.0, 0.0,
                     										GridBagConstraints.CENTER,
                     										GridBagConstraints.HORIZONTAL,
                     										new Insets(0, 0, 0, 0), 0, 0));
-			gridBagCenter.add(ipList, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-																	GridBagConstraints.CENTER,
-																	GridBagConstraints.HORIZONTAL,
-																	new Insets(0, 0, 0, 0), 0, 0));
+
+			gridBagCenter.add(numPortServer, new GridBagConstraints(1, 2, 1, 1, 0.0, 0.0,
+							  GridBagConstraints.CENTER,
+							  GridBagConstraints.HORIZONTAL,
+							  new Insets(0, 0, 0, 0), 0, 0));
 		
 		
 		this.setVisible(true);
@@ -156,13 +164,13 @@ public class Launcher extends javax.swing.JFrame{
 
 	
 	private void initTabLabelAndJList(){
-		for(int i=0; i<2;i++){
+		for(int i=0; i<nbGridRow;i++){
 			tabLabel[i] = new JLabel();
 			tabLabel[i].setText(strJLabel[i]);
 		}
 		/*
-		 * init the last wich will contains the IP address of the computer
-		 * Should use INET ADDRESS to get the ip address
+		 * JList who will contains the IP address of the computer
+		 * use INET ADDRESS to get the ip address
 		 * 
 		 */
 		try {
@@ -201,5 +209,9 @@ public class Launcher extends javax.swing.JFrame{
 
 	public JTextField getIpAdv() {
 		return ipAdv;
+	}
+	
+	public JTextField getNumPortServer() {
+		return numPortServer;
 	}
 }
