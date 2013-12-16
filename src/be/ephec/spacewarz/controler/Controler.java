@@ -590,9 +590,9 @@ public class Controler {
 				modifyImage(false, myTarget, true);
 				String touchName = client.read(String.class);
 				if(client.read(boolean.class)){
-					JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché et coulé : "+touchName);
+					JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché et détruit : "+touchName);
 				}
-				else JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+touchName);
+				else JOptionPane.showMessageDialog(null, "Touché !!");
 				nbVieAdvers=nbVieAdvers-1;
 			} else {
 				modifyImage(false, myTarget, false);
@@ -614,9 +614,9 @@ public class Controler {
 				modifyImage(false, myTarget, true);
 				String touchName = server.read(String.class);
 				if(server.read(boolean.class)){
-					JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché et coulé : "+touchName);
+					JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché et détruit : "+touchName);
 				}
-				else JOptionPane.showMessageDialog(null, "Bravo ! Vous avez touché : "+touchName);
+				else JOptionPane.showMessageDialog(null, "Touché !!");
 				nbVieAdvers=nbVieAdvers-1;
 			} else {
 				modifyImage(false, myTarget, false);
