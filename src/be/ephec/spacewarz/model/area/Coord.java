@@ -2,7 +2,12 @@ package be.ephec.spacewarz.model.area;
 
 import java.io.Serializable;
 
-
+/**
+ * La classe Coord représente une coordonnée (x;y)
+ * 
+ * @author Olivier Vroman & Jonathan Beersaerts
+ *
+ */
 public class Coord implements Serializable{
 	private static final long serialVersionUID = 1372780970136429950L;
 	private int x;
@@ -30,7 +35,9 @@ public class Coord implements Serializable{
 	public void setY(int y) {
 		this.y = y;
 	}
-	
+	/**
+	 * Méthode toString principalement utilisée pour le debug de l'application
+	 */
 	public String toString(){
 		return("("+getX()+";"+getY()+")");
 	}

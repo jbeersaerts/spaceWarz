@@ -27,6 +27,10 @@ import be.ephec.spacewarz.view.PlayingView;
 import be.ephec.spacewarz.view.launcher.Launcher;
 
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class Controler.
+ */
 public class Controler {
 	
 	/* DEBUG */
@@ -70,6 +74,20 @@ public class Controler {
 	
 	
 	
+	/**
+	 * Instantiates a new controler.
+	 *
+	 * @param gameArea the game area
+	 * @param opponentArea the opponent area
+	 * @param adm the adm
+	 * @param star the star
+	 * @param spc1 the spc1
+	 * @param spc2 the spc2
+	 * @param hunt1 the hunt1
+	 * @param hunt2 the hunt2
+	 * @param gamingView the gaming view
+	 * @param gameLauncher the game launcher
+	 */
 	public Controler(Area gameArea, Area opponentArea, AdmiralSpaceCraft adm,
 			DeathStar star, SpaceCraft spc1, SpaceCraft spc2,
 			SpaceHunter hunt1, SpaceHunter hunt2, PlayingView gamingView,
@@ -89,13 +107,11 @@ public class Controler {
 	}
 
 	/**
-	 * Put the specialised Pion on the gameArea at the given position
-	 * 
-	 * @param pion Pion who will place into the Area
+	 * Put the specialised Pion on the gameArea at the given position.
+	 *
 	 * @param x x position
 	 * @param y y position
 	 * @return Return 0 if the placement is OK or -1 if it's not possible to place the Pion at given position.
-	 * 
 	 */
 	
 	
@@ -118,6 +134,13 @@ public class Controler {
 	
 	
 	
+	/**
+	 * Put the specialised Pion on the gameArea at the given position.
+	 *
+	 * @param x x position
+	 * @param y y position
+	 * @return Return 0 if the placement is OK or -1 if it's not possible to place the Pion at given position.
+	 */
 	private int putSpaceHunter(int x, int y){
 		if(SpaceHunter.getNbInstance() == 2) return -1;
 		if(y > gameArea.getSide()-2) return -1;
@@ -144,6 +167,13 @@ public class Controler {
 	
 	
 
+	/**
+	 * Put the specialised Pion on the gameArea at the given position.
+	 *
+	 * @param x x position
+	 * @param y y position
+	 * @return Return 0 if the placement is OK or -1 if it's not possible to place the Pion at given position.
+	 */
 	private int putSpaceCraft(int x, int y){
 		if(SpaceCraft.getNbInstance() == 2) return -1;
 		if(x<0 || x > gameArea.getSide()-2) return -1;
@@ -189,6 +219,13 @@ public class Controler {
 	
 	
 	
+	/**
+	 * Put the specialised Pion on the gameArea at the given position.
+	 *
+	 * @param x x position
+	 * @param y y position
+	 * @return Return 0 if the placement is OK or -1 if it's not possible to place the Pion at given position.
+	 */
 	private int putDeathStar(int x, int y){
 		if(DeathStar.getNbInstance() == 1) return -1;
 		if(x<1 || x > gameArea.getSide()-2) return -1;
@@ -223,6 +260,13 @@ public class Controler {
 
 	
 	
+	/**
+	 * Méthode vérifiant si un tir à touché un vaisseau à la coordonnée donnée.
+	 *
+	 * @param x position d'abscisse
+	 * @param y position d'ordonnée
+	 * @return Le pion qui a été touché ou null si ce n'est pas touché
+	 */
 	private Pion fireOnCase(int x, int y){
 		
 			
@@ -237,10 +281,11 @@ public class Controler {
 	}
 	
 	/**
-	 * 
-	 * @param grille : true pour la grille du joueur, false pour la grille adverse
-	 * @param c : coordonnées du tir
-	 * @param touch : true si touché, false si dans l'eau
+	 * Méthode de modifiaction de l'image d'une case lorsqu'il y a eu un tir dessus. 
+	 *
+	 * @param joueur : <code>true</code> pour la grille du joueur, <code>false</code> pour la grille de l'adversaire
+	 * @param coord : la coordonnée de tir
+	 * @param touch : <code>true</code> si touché, <code>false</code> si dans l'eau
 	 */
 	private void modifyImage(boolean joueur, Coord coord, boolean touch){
 		int l = coord.getX(); // Récupère la ligne et la colonne de l'image à modifier
@@ -255,6 +300,10 @@ public class Controler {
 	}
 	
 	
+	/**
+	 * Méthode permettant de réinitialiser le placement des vaisseaux dans l'Area
+	 * au niveau du modèle.
+	 */
 	private void resetPlacement(){
 		for(int i = 0; i<gameArea.getSide();i++){
 			for(int j = 0; j<gameArea.getSide();j++){
@@ -272,6 +321,11 @@ public class Controler {
 
 
 	
+	/**
+	 * Méthode qui va ajouter tous les listeners necessaire au fonctionnement du programme 
+	 * sur la {@link PlayingView} et le {@link Launcher}.
+	 * 
+	 */
 	private void addListenersOnView(){
 		
 		/*
@@ -338,9 +392,7 @@ public class Controler {
 	}
 	
 	/**
-	 * 
-	 * Méthode ajoutant des listeners sur la grille de l'adversaire 
-	 * 
+	 * Méthode ajoutant des listeners sur la grille de l'adversaire.
 	 */
 	private void addTabOpponentListener(){
 		for(int l=0;l<gamingView.getL();l++){
@@ -358,6 +410,11 @@ public class Controler {
 	}
 	
 	
+	/**
+	 * Méthode permettant d'instance le socket server ou le socket client, en fonction du choix fait sur le launcher
+	 *
+	 * @param b : true pour le socket server et false pour le socket client
+	 */
 	private void clientOrServer(boolean b){	
 		setServer(b);
 		if(debug)System.out.println("debug isServer : "+b);
@@ -391,12 +448,22 @@ public class Controler {
 		else JOptionPane.showMessageDialog(null, "Adresse Ip non valide");
 	}
 		
+	/**
+	 * Modifie la valeur logique "estServeur"
+	 *
+	 * @param isServer false : n'est pas serveur, true : est serveur
+	 */
 	private void setServer(boolean isServer){
 		this.isServer = isServer;		
 	}
 	
 	
 	
+	/**
+	 * méthode qui va récupérer l'ip rentrée par le client dans le launcher, et vérifier si elle est valide
+	 *
+	 * @return true si l'ip est valide, false si elle ne l'est pas.
+	 */
 	private boolean getIpFromLauncher(){
 		ipAdv = gameLauncher.getIpAdv().getText();	
 		try {
@@ -409,6 +476,11 @@ public class Controler {
 	}
 	
 
+	/**
+	 * Méthode appelée lors d'un clic sur le panel de choix des bateaux
+	 *
+	 * @param evt1 le MouseEvent du panel de choix des bateaux
+	 */
 	private void selectCraftEvent(MouseEvent evt1){
 		int c = ((MyJLabels)evt1.getSource()).getColumn();
 		choice = c;
@@ -416,6 +488,11 @@ public class Controler {
 
 	
 	
+	/**
+	 * Méthode liées au listener du bouton quitter de {@link PlayingView}
+	 *
+	 * @param e l'actionEvent
+	 */
 	private void quitGameEvent(ActionEvent e){
 		gamingView.dispose();
 		if(server != null && client != null){
@@ -430,6 +507,10 @@ public class Controler {
 	
 	
 	
+	/**
+	 * Méthode liée au bouton reset de {@link PlayingView} permettant de réinitialiser l'affichage de la grille du joueur.
+	 * 
+	 */
 	private void resetSpaceships(){
 		if(!gameReady){
 			if(JOptionPane.showConfirmDialog(gamingView.getBackgroundLabel(), "Etes vous sûr de vouloir réinitialiser la position de tous les vaisseaux ?")==0){
@@ -449,6 +530,14 @@ public class Controler {
 		else JOptionPane.showMessageDialog(null, "Ce n'est pas bien de vouloir retirer ses vaisseaux\nen cours de partie !");
 	}
 	
+	
+	
+	/**
+	 * Méthode appelée lors de l'activation du bouton Pret de {@link PlayingView}, va informer l'adversaire que sa grille est prête
+	 * et attendre que ce dernier soit prêt également.
+	 *
+	 * @param e the e
+	 */
 	private void readyEvent(ActionEvent e){
 		if(!gameReady){
 			if(spaceshipCounter==6){
@@ -487,6 +576,12 @@ public class Controler {
 	
 	
 	
+	/**
+	 * Méthode liée au case de la grille de l'adversaire sur {@link PlayingView}
+	 * On y gère la communication tour par tour entre le serveur et le client.
+	 *
+	 * @param evt the evt
+	 */
 	private void fireEvent(MouseEvent evt){
 			
 			int l = ((MyJLabels)evt.getSource()).getLine();
@@ -509,22 +604,14 @@ public class Controler {
 					clientReception();
 				}
 			}
-				
-		
-		
-		/*if(fireOnCase(l, c)!=null) {
-			if(debug) System.out.println("Touché !");
-			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/touched.png")));
-			fireOnCase(l, c).isTouch();
-		}
-		else{
-			if(debug) System.out.println("Tir perdu dans les profondeurs de l'espace !");
-			gamingView.getTabOpponentLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/plouf.png")));
-		}*/	
+
 	}
 
 	
 	
+	/**
+	 * Méthode regroupant la séquence de lecture/réponses par le client lorsque le serveur envoie une coordonnée 
+	 */
 	private void clientReception(){
 		try {
 			opponentTarget = client.read(Coord.class);
@@ -554,6 +641,9 @@ public class Controler {
 		}
 	}
 	
+	/**
+	 * Méthode regroupant la séquence de lecture/réponses par le serveur lorsque le client envoie une coordonnée 
+	 */
 	private void serverReception(){
 		try {
 			opponentTarget = server.read(Coord.class);
@@ -583,6 +673,9 @@ public class Controler {
 		}	
 	}
 
+	/**
+	 * Méthode regroupant la séquence client lorsqu'il envoie une coordonnée de tir au serveur et attend les réponses
+	 */
 	private void clientSend(){
 		try {
 			client.write(myTarget);
@@ -607,6 +700,9 @@ public class Controler {
 		}
 	}
 	
+	/**
+	 * Méthode regroupant la séquence serveur lorsqu'il envoie une coordonnée de tir au serveur et attend les réponses
+	 */
 	private void serverSend(){
 		try {
 			server.write(myTarget);
@@ -631,7 +727,12 @@ public class Controler {
 		}
 	}
 	
- 	private void putPionViewEvent(MouseEvent evt) {
+ 	/**
+	  * Méthode liée à l'event de placement des pion sur la grille du joueur
+	  *
+	  * @param evt the evt
+	  */
+	 private void putPionViewEvent(MouseEvent evt) {
 		int l = ((MyJLabels)evt.getSource()).getLine();
 		int c = ((MyJLabels)evt.getSource()).getColumn();
 		switch(choice){
@@ -713,6 +814,11 @@ public class Controler {
 		}
 	}
 	
+	/**
+	 * Socket exception catch.
+	 *
+	 * @param servSock the serv sock
+	 */
 	private void socketExceptionCatch(Server servSock){
 		if(debug) System.out.println("flow error on server socket");
 		try {
@@ -723,6 +829,11 @@ public class Controler {
 		System.exit(-1);
 	}
 	
+	/**
+	 * Socket exception catch.
+	 *
+	 * @param clientSock the client sock
+	 */
 	private void socketExceptionCatch(Client clientSock){
 		if(debug) System.out.println("flow error on client socket");
 		try {

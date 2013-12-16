@@ -1,7 +1,6 @@
 package be.ephec.spacewarz;
 
 import javax.swing.SwingUtilities;
-
 import be.ephec.spacewarz.controler.Controler;
 import be.ephec.spacewarz.model.area.Area;
 import be.ephec.spacewarz.model.pions.AdmiralSpaceCraft;
@@ -11,8 +10,11 @@ import be.ephec.spacewarz.model.pions.SpaceHunter;
 import be.ephec.spacewarz.view.PlayingView;
 import be.ephec.spacewarz.view.launcher.Launcher;
 
+/**
+ * The Class SpaceWarz is the main of the Game.
+ * 
+ */
 public class SpaceWarz {
-
 	public static void main(String[] args) {
 		
 		SwingUtilities.invokeLater(new Runnable() {

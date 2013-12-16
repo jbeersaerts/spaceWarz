@@ -1,7 +1,7 @@
 /**
  * 
- * Le package be.ephec.spacewarz.model.net contient les classes nécessaires
- * pour la gestion des communications réseaux de l'application.
+ * Le package Net contient les classes nécessaires
+ * à gestion des communications réseaux de l'application.
  * Les classes du package sont utilisées par le controleur afin de 
  * communiquer par le réseau entre deux instances de l'application.
  * 

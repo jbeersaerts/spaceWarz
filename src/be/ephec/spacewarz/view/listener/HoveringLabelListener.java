@@ -8,7 +8,7 @@ import be.ephec.spacewarz.view.MyJLabels;;
  * 
  * MouseListener pour l'effet relief lorsque l'on passe sur les grilles de jeu avec la souris
  * 
- * @author O.Vroman & J.Beersaerts
+ * @author Olivier Vroman & Jonathan Beersaerts
  *
  */
 

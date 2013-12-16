@@ -12,21 +12,28 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import be.ephec.spacewarz.controler.Controler;
 import be.ephec.spacewarz.view.listener.HoveringLabelListener;
 import be.ephec.spacewarz.view.MyJLabels;
 
 
+/**
+ * La classe {@link PlayingView} représente la view de l'application.
+ * Elle est composée des deux grilles de jeu ainsi que d'un tableau affichant les pions disponibles.
+ * Elle est également composée des différents boutons nécessaires au fonctionnement de l'application
+ * 
+ * La classe est dénuée d'action listeners car ils sont tous gerés par {@link Controler}
+ * 
+ * @author Olivier Vroman & Jonathan Beersaerts
+ */
 @SuppressWarnings("serial")
 public class PlayingView extends javax.swing.JFrame {
-	
-	
-
 	
 	private final int L = 10;
 	private final int C = 10;
 	
 	private JLabel backgroundLabel;
-
+	
 	private JLabel playerGrid;
 	private JPanel player_responsive_grid;
 	private JLabel tabPlayerLabel[][] = new MyJLabels[L][C];
@@ -44,11 +51,17 @@ public class PlayingView extends javax.swing.JFrame {
 	private JButton readyButton;
 
 	
+	/**
+	 * Instantiates a new playing view.
+	 */
 	public PlayingView() {
 		super();
 		initGUI();
 	}
 	
+	/**
+	 * Inits the gui.
+	 */
 	private void initGUI() {
 
 		{
@@ -242,45 +255,90 @@ public class PlayingView extends javax.swing.JFrame {
 
 	
 	
+	/**
+	 * Gets the background label.
+	 *
+	 * @return the background label
+	 */
 	public JLabel getBackgroundLabel() {
 		return backgroundLabel;
 	}
 
 
+	/**
+	 * Gets the tab player label.
+	 *
+	 * @return the tab player label
+	 */
 	public JLabel[][] getTabPlayerLabel() {
 		return tabPlayerLabel;
 	}
 
 
+	/**
+	 * Gets the tab opponent label.
+	 *
+	 * @return the tab opponent label
+	 */
 	public JLabel[][] getTabOpponentLabel() {
 		return tabOpponentLabel;
 	}
 
 
+	/**
+	 * Gets the tab vaisseaux.
+	 *
+	 * @return the tab vaisseaux
+	 */
 	public JLabel[][] getTabVaisseaux() {
 		return tabVaisseaux;
 	}
 
 
+	/**
+	 * Gets the quit button.
+	 *
+	 * @return the quit button
+	 */
 	public JButton getQuitButton() {
 		return quitButton;
 	}
 
 
+	/**
+	 * Gets the reset button.
+	 *
+	 * @return the reset button
+	 */
 	public JButton getResetButton() {
 		return resetButton;
 	}
 	
+	/**
+	 * Gets the ready button.
+	 *
+	 * @return the ready button
+	 */
 	public JButton getReadyButton() {
 		return readyButton; 
 	}
 
 
+	/**
+	 * Gets the line.
+	 *
+	 * @return the line
+	 */
 	public int getL() {
 		return L;
 	}
 
 
+	/**
+	 * Gets the columns.
+	 *
+	 * @return the column
+	 */
 	public int getC() {
 		return C;
 	}

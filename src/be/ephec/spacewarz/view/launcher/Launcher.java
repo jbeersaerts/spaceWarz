@@ -18,24 +18,31 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListModel;
 
+import be.ephec.spacewarz.controler.Controler;
 
+
+/**
+ * La classe Launcher représente le launcher de l'application au niveau de l'interface graphique.
+ * 
+ * La classe est dénuée d'action listeners car ils sont tous gerés par {@link Controler}
+ * 
+ */
 @SuppressWarnings("serial")
 public class Launcher extends javax.swing.JFrame{
+	
 	private JPanel title;
 	private JPanel bottom;
 	private JPanel gridBagCenter;
 	private JPanel borderLeft;
 	private JPanel borderRight;
+	
 	private JButton quitButton;
 	private JButton playServerButton;
 	private JButton playClientButton;
 	
-	
 	private static final int nbGridRow = 3;
-	
 	private JTextField ipAdv = new JTextField();
 	private JTextField numPortServer = new JTextField() ;
-	
 	private JLabel tabLabel[] = new JLabel[3]; /* 3 on first column */
 	private JList<String> ipList;
 	private String strJLabel[] ={
@@ -46,6 +53,9 @@ public class Launcher extends javax.swing.JFrame{
 	
 	
 	
+	/**
+	 * Instantiates a new launcher.
+	 */
 	public Launcher(){
 		
 
@@ -86,20 +96,6 @@ public class Launcher extends javax.swing.JFrame{
 		this.bottom.add(quitButton);
 		
 		this.getContentPane().add(this.bottom,BorderLayout.SOUTH);
-		
-		/*playButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				playButtonAction(e);				
-			}});*/
-		
-		/*quitButton.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				quitButtonAction(e);			}
-			});*/
-		
-		
 		/*
 		 * 
 		 * Borders left right Panel
@@ -163,6 +159,9 @@ public class Launcher extends javax.swing.JFrame{
 	}
 
 	
+	/**
+	 * Inits the tab label and j list.
+	 */
 	private void initTabLabelAndJList(){
 		for(int i=0; i<nbGridRow;i++){
 			tabLabel[i] = new JLabel();
@@ -192,25 +191,50 @@ public class Launcher extends javax.swing.JFrame{
 	}
 
 	
+	/**
+	 * Gets the quit button.
+	 *
+	 * @return the quit button
+	 */
 	public JButton getQuitButton() {
 		return quitButton;
 	}
 
 
+	/**
+	 * Gets the play server button.
+	 *
+	 * @return the play server button
+	 */
 	public JButton getPlayServerButton() {
 		return playServerButton;
 	}
 
 
+	/**
+	 * Gets the play client button.
+	 *
+	 * @return the play client button
+	 */
 	public JButton getPlayClientButton() {
 		return playClientButton;
 	}
 
 
+	/**
+	 * Gets the ip adv.
+	 *
+	 * @return the ip adv
+	 */
 	public JTextField getIpAdv() {
 		return ipAdv;
 	}
 	
+	/**
+	 * Gets the num port server.
+	 *
+	 * @return the num port server
+	 */
 	public JTextField getNumPortServer() {
 		return numPortServer;
 	}
