@@ -760,9 +760,9 @@ public class Controler {
 		case 1 : 
 			if(SpaceCraft.getNbInstance()== 0){
 				if(putSpaceCraft(l, c) == 0){
-					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/spaceCraft/SpaceCraft_1_1.png")));
-					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/spaceCraft/SpaceCraft_1_2.png")));
-					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/spaceCraft/SpaceCraft_1_3.png")));
+					gamingView.getTabPlayerLabel()[l][c+1].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/spaceCraft_1_1.png")));
+					gamingView.getTabPlayerLabel()[l][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/spaceCraft_1_2.png")));
+					gamingView.getTabPlayerLabel()[l+1][c].setIcon(new ImageIcon(getClass().getClassLoader().getResource("img/spaceship/SpaceCraft/spaceCraft_1_3.png")));
 					if(debug) System.out.println("spcCraft "+spc1.getCase(0));
 					spaceshipCounter++;
 				}
