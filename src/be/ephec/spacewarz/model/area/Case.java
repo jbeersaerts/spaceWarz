@@ -69,10 +69,7 @@ public class Case{
 	 *  
 	 */
 	public String toString(){
-		//return(getX()+":"+getY()+" "+isUse());
-		if(this.usedBy == null) return "1";
-		return "O";
-		
+		return(position.getX()+":"+position.getY());
 	}
 
 }
