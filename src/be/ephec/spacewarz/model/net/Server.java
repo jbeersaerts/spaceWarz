@@ -1,4 +1,4 @@
-package be.ephec.spacewarz.net;
+package be.ephec.spacewarz.model.net;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
