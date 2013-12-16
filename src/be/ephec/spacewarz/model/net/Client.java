@@ -63,10 +63,13 @@ public class Client {
 	 * Méthode bloquante tant qu'il n'y a pas d'objets ou de types primitifs à lire sur le flux.
 	 * 
 	 * @param readClass : Indique la classe de l'objet ou le type primitif à lire sur le flux d'entrée du socket.
-	 * 					  Cette indication se présente sous la forme type/Objet.class. Exemple : 
-	 * 					  Client client = new Client(adr,port);
-	 * 					  String strRead = client.read(String.class);
-	 * 					  int intRead = client.read(int.class);
+	 * 					  Cette indication se présente sous la forme type/Objet.class.<br/>Exemple : 
+	 * 					  <pre>
+	 * 					  <code>
+	 * 			Client client = new Client(adr,port);
+	 * 			String strRead = client.read(String.class);
+	 * 			int intRead = client.read(int.class);</code>
+	 *          </pre>
 	 * @return : Renvoi l'objet ou le type primitif lu sur le flux d'entrée du socket. 
 	 * 			 L'objet ou type primitif devant obligatoirement être du type spécifié dans l'argument de la méthode
 	 * @throws ClassNotFoundException : Exception lancée si la classe spécifiée en argument n'est pas trouvée

@@ -6,11 +6,12 @@
  * communiquer par le réseau entre deux instances de l'application.
  * 
  * Elle contient 2 classes : 
- * 		-Server.java
- * 		-Client.java
- * 
- */
-/**
+ * 		<ul>
+ * 		<li>Server.java</li>
+ * 		<li>Client.java</li>
+ * 		</ul>
+ *
+ *
  * @author Olivier Vroman & Jonathan Beersaerts
  *
  */

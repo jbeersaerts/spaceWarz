@@ -1,0 +1,8 @@
+be.ephec.spacewarz
+be.ephec.spacewarz.controler
+be.ephec.spacewarz.model.area
+be.ephec.spacewarz.model.net
+be.ephec.spacewarz.model.pions
+be.ephec.spacewarz.view
+be.ephec.spacewarz.view.launcher
+be.ephec.spacewarz.view.listener

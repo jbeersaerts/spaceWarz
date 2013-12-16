@@ -55,7 +55,7 @@ public class Case{
 	/**
 	 * Modify the case to become a pion 
 	 * 
-	 * @param name of the pion who use the case
+	 * @param usedBy : reference of the Pion object
 	 */
 	public void becomePion(Pion usedBy){
 		this.setUsedBy(usedBy);
